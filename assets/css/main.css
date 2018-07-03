@@ -291,6 +291,11 @@ a:focus
 {
     margin-top: 0;
     margin-bottom: 4.5rem;
+    transform: rotate(90deg);
+    width: 15%;
+    display: inline-block;
+    /*position: relative;*/
+    border-radius: 50%;
 }
 
 #intro h1
