@@ -167,7 +167,7 @@ hr {
 }
 /* Home Section */
 .intro {
-	display: table;
+	display: block;
 	width: 100%;
 	height: auto;
 	padding: 100px 0;
@@ -194,7 +194,7 @@ hr {
 #about img {
 	border-radius: 50%;
 	width: 200px;
-	height: 200px;
+	height: 150px;
 	display: inline-block;
 }
 #about p {
