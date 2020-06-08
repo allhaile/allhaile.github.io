@@ -5,6 +5,10 @@ body, html {
 	color: #656c6d;
 	width: 100% !important;
 	height: 100% !important;
+	margin-top: 0px!important;
+	margin-bottom: 0px !important;
+	margin-right: 0px !important;
+	margin-left: 0px !important;
 }
 h1 {
 	font-weight: 700;
@@ -78,37 +82,42 @@ hr {
 	margin-bottom: 30px;
 	border: 0;
 }
+/* Header Image */
+.float-image-right {
+    float: right;
+    margin: 0px 10px 10px;
+}
+
+.float-image-left {
+    float: left;
+    margin: 0px 10px 10px;
+}
+
+.header-img {
+	top: auto;
+	width: 200px;
+	height: 75%;
+}
 /* Navigation */
 #nav {
 	z-index: 9999;
 }
 #nav.affix {
-	position: fixed;
-	top: 0;
+	/* position: fixed;
+	top: 0; */
+	top: 20px;
+    z-index: 9999 !important;
 	width: 100%
 }
 .navbar-custom {
 	margin-bottom: 0;
-	background-color: #121d1f;
 	border-radius: 0px;
 	padding: 10px 0;
+	float: right;
 }
-.navbar-custom .navbar-brand {
-	font-weight: 600;
-}
-.navbar-custom .navbar-brand:focus {
-	outline: 0;
-}
-.navbar-custom .navbar-brand .navbar-toggle {
-	padding: 4px 6px;
-	font-size: 16px;
-	color: #fff;
-}
-.navbar-custom .navbar-brand .navbar-toggle:focus, .navbar-custom .navbar-brand .navbar-toggle:active {
-	outline: 0;
-}
+
 .navbar-custom a {
-	color: #f4f5f6;
+	color: red;
 }
 .navbar-custom .nav li a {
 	text-transform: uppercase;
@@ -120,7 +129,7 @@ hr {
 .navbar-custom .nav li a:hover {
 	outline: 0;
 	color: #7bc3d1;
-	background-color: transparent;
+	/* background-color: transparent; */
 }
 .navbar-custom .nav li a:focus, .navbar-custom .nav li a:active {
 	outline: 0;
@@ -168,7 +177,7 @@ hr {
 /* Home Section */
 .intro {
 	display: block;
-	width: 100%;
+	width: 50%;
 	height: auto;
 	padding: 100px 0;
 	text-align: center;
@@ -660,10 +669,7 @@ a:focus, .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:acti
 section {
 	padding: 120px 0;
 }
-header .intro-text {
-	padding-top: 300px;
-	padding-bottom: 200px;
-}
+
 .timeline:before {
 	left: 50%;
 }
