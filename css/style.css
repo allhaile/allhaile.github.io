@@ -2,7 +2,7 @@ body, html {
 	font-family: 'Open Sans', sans-serif;
 	text-rendering: optimizeLegibility !important;
 	-webkit-font-smoothing: antialiased !important;
-	color: #656c6d;
+	/* color: #656c6d; */
 	width: 100% !important;
 	height: 100% !important;
 	margin-top: 0px!important;
@@ -10,6 +10,8 @@ body, html {
 	margin-right: 0px !important;
 	margin-left: 0px !important;
 }
+
+
 h1 {
 	font-weight: 700;
 }
