@@ -158,8 +158,13 @@ img {
     position: relative;
     flex: 1 0 22rem;
     margin: 1rem;
-    color: #fff;
+    color: white;
     cursor: pointer;
+}
+
+.gallery-item img {
+    object-fit: contain;
+    filter: grayscale(100%);
 }
 
 .gallery-item:hover .gallery-item-info,
@@ -168,10 +173,11 @@ img {
     justify-content: center;
     align-items: center;
     position: absolute;
+    text-align: center;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.769);
 }
 
 .gallery-item-info {
@@ -180,7 +186,7 @@ img {
 
 .gallery-item-info li {
     display: inline-block;
-    font-size: 1.7rem;
+    font-size: 2.7rem;
     font-weight: 600;
 }
 

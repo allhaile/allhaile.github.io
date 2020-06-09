@@ -589,23 +589,24 @@ color: #2c3e50;
 .form-control:-ms-input-placeholder {
 color: #2c3e50;
 }
-#contact .social {
+.social {
 	margin-top: 60px;
+	align-items: center;
 }
-#contact .social ul li {
+.social ul li {
 	display: inline-block;
 	margin: 0 20px;
 }
-#contact .social i.fa {
+.social i.fa {
 	font-size: 30px;
 	padding: 4px 5px;
-	color: #fff;
+	color: black;
 	transition: all 0.5s;
 }
-#contact .social i.fa:hover {
-	color: #121d1f;
+.social i.fa:hover {
+	color: #eb520b;
 }
-#contact .btn {
+.btn {
 	background-color: transparent;
 	border: 1px solid #fff;
 	border-radius: 0;
@@ -613,7 +614,7 @@ color: #2c3e50;
 	color: #fff;
 	margin-top: 15px;
 }
-#contact .btn:hover, #contact .btn:focus {
+.btn:hover, #contact .btn:focus {
 	background-color: #121d1f;
 	border: 1px solid #121d1f;
 }
