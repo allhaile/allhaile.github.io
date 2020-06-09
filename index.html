@@ -3,9 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Designer|Developer|Dreamer</title>
+<title>Designer | Developer | Dreamer</title>
 <meta name="description" content="">
 <meta name="author" content="Haile Shavers">
+<meta property="og:image" content="resources/haile-tongue-meme.png">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+
 
 <!-- Favicons
     ================================================== -->
@@ -21,7 +24,7 @@
 <!-- Stylesheet
     ================================================== -->
 <link rel="stylesheet" type="text/css"  href="css/style.css">
-<link rel="stylesheet" type="text/css" href="css/prettyPhoto.css">
+<link rel="stylesheet" type="text/css"  href="css/food-grid.css">
 <link href='http://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
 <script type="text/javascript" src="js/modernizr.custom.js"></script>
@@ -29,83 +32,230 @@
 </head>
 <body >
 
+<div class="container">
 
+		<div class="profile">
 
-<!-- Header && Navigation-->
-<header id="header">
-    <div class="container">
-      <img class="float-image-left header-img" src="resources/haile-peace-meme.png" alt="Haile Memoji"> 
+			<div class="profile-image">
 
-        <div class="intro-text">
-          <h1>Hello, I'm <span class="name">Haile Shavers</span></h1>
-          <p>Designer | Developer | Dreamer</p>
-  </div> 
-  <nav>  
-      <ul class="nav nav-bar-custom nav-pills">
-        <li> <a class="" href="#about">About</a> </li>
-        <li> <a class="" href="work.html">Work</a> </li>
-        <li> <a class="" href="food.html">Food</a> </li>
-        <li> <a href="resources/haile-resume-2020.pdf">Resume</a> </li>
-        
-      </ul>
-   </nav>
-  </div>
+				<img src="resources/haile-peace-meme.png" alt="">
+
+			</div>
+
+			<div class="profile-user-settings">
+
+				<h1 class="profile-user-name">Hi, I'm Haile Shavers</h1>
+				<button class="btn profile-edit-btn">Leave suggestions</button>
+
+				<button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+
+			</div>
+
+			<div class="profile-stats">
+
+				<ul>
+					<li><span class="profile-stat-count">11</span> <b>countries</b></li>
+					<li><span class="profile-stat-count">4</span> <b>companies</b></li>
+					<li><span class="profile-stat-count">1</span> <b>Haile</b></li>
+				</ul>
+
+			</div>
+
+			<div class="profile-bio">
+        <p>Designer | Developer | Dreamer</p>
+				<p>Welcome to my site. Here you can see the many projects, interests, and experience that make up this girl named Haile. Enjoy! 📷✈️</p>
+
+           <nav>  
+                <ul class="nav-pills">
+                  <!-- <li> <a class="" href="index.html">Home</a> </li>
+                  <li> <a class="" href="work.html">Work</a> </li> -->
+                  <li> <a href="resources/haile-resume-2020.pdf">Resume</a> </li>
+                  
+                </ul>
+             </nav>
+             </div>
+            
+
+		</div>
+		<!-- End of profile section -->
+	<!-- End of container -->
+
 </header>
+
+<main>
+
+	<div class="container">
+
+		<div class="gallery">
+
+
+			<div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/berkeley-text.png" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Bachelor of Arts in Cognitive Science</li>
+					</ul>
+
+				</div>
+
+      </div>
+      
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/slack-logo.svg" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Recruiting Coordinater @ Slack</li>
+					</ul>
+
+				</div>
+
+      </div>
+      
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/consensys_logo-transparent.png" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Engineer Intern @ Consensys</li>
+					</ul>
+
+				</div>
+
+      </div>
+
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/Butterfly_Movement_Logo.png" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">The Butterfly Movement</li>
+					</ul>
+
+				</div>
+
+			</div>
+
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/tavtech-logo.png" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Data Science in Israel</li>
+					</ul>
+
+				</div>
+
+      </div>
+     
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/ethereum.jpeg" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Devcon Scholar in Japan</li>
+					</ul>
+
+				</div>
+
+      </div>
+
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/calperformances.jpg" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Web Assistant @ Cal Performances</li>
+					</ul>
+
+				</div>
+
+			</div>
+     
+      <div class="gallery-item" tabindex="0">
+
+				<img src="img/food-photos/ramen.JPG" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">DIY Foodie</li>
+					</ul>
+
+				</div>
+
+			</div>
+
+
+      <div class="gallery-item" tabindex="0">
+
+				<img src="resources/highlights/medium-logo.png" class="gallery-image" alt="">
+
+				<div class="gallery-item-info">
+
+					<ul>
+						<li class="gallery-item-likes">Amatuer Technical Writer</li>
+					</ul>
+
+				</div>
+
+      </div>
+      
+
+
+		</div>
+		<!-- End of gallery -->
+
+		<!-- <div class="loader"></div> -->
+
+	</div>
+	<!-- End of container -->
+
+</main>
+
+
+
+
+
+
 <!-- About Section -->
-<div id="about">
+<!-- <div id="about">
   <div class="container">
     <div >
       <hr>
     </div>
     <div class="row">
-      <!-- <div class="col-md-12 text-center"><img src="img/about.jpg" class="img-responsive"></div> -->
       <div class="col-md-8 col-md-offset-2">
         <div class="about-text">
           <p>Haile is a graduate of University of California, Berkeley with a major in Cognitive Science. With her major she is able to combine her passion for design with the main principles of cognitive science in order to create her technical projects. Her technical interets are full stack web development, user experience/interface design, and most recently data science.
             
           <p>Haile is passionate about learning and finding new ways to contribute to her community of other Black Women in technology. She is an active Butterfly of <a href="http://www.thebutterflymovement.com/about.html"> The Butterfly Movement</a>, and has leveraged her technical skills to assist with branding efforts of the organization. </p>
           <p>In high school she was a scholar in SMASH Academy. <a href="https://www.smash.org/programs/smash-academy/">SMASH Academy</a> is a three-year STEM residential college prep program for students of color. During this program she was introduced to utilizing technology for social good, mentorship with industry professionals and public speaking training. 
-            <!-- Back in 2016, Haile was honored to be the 'Literal Face of Diversity in Tech' by the Kapor Center for Social Impact.  -->
             </p>
-          <!-- <p class="text-center"><a class="btn btn-primary" href="#"><i class="fa fa-download"></i> Download Resume</a></p> -->
+        
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Skills Section -->
-<!-- Taking out skills for now. Maybe I'll put it back  -->
-<!-- <div id="skills" class="text-center">
-  <div class="container">
-    <div class="section-title center">
-      <h2>Skills</h2>
-      <hr>
-    </div>
-    <div class="row">
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="95"> <span class="percent">95</span> </span>
-        <h4>HTML & CSS</h4>
-      </div>
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="85"> <span class="percent">85</span> </span>
-        <h4>Javascript</h4>
-      </div>
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="80"> <span class="percent">80</span> </span>
-        <h4>Python/Flask</h4>
-      </div>
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="80"> <span class="percent">80</span> </span>
-        <h4>Git</h4>
-      </div>
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="80"> <span class="percent">80</span> </span>
-        <h4>Adobe Creative Suite</h4>
-      </div>
-      <div class="col-md-4 col-sm-6 skill"> <span class="chart" data-percent="70"> <span class="percent">70</span> </span>
-        <h4>Sketch & Invision</h4>
       </div>
     </div>
   </div>
 </div> -->
 
       <div class="social">
-        <div class="container text-center">
+        <div class="container">
         <ul>
           <li><a href="https://www.facebook.com/hshavers"><i class="fa fa-facebook"></i></a></li>
           <li><a href="https://github.com/allhaile"><i class="fa fa-github"></i></a></li>
