@@ -312,6 +312,10 @@ img {
     animation: loader 500ms linear infinite;
 }
 
+a {
+    text-decoration: none;
+}
+
 /* Media Query */
 
 @media screen and (max-width: 40rem) {
