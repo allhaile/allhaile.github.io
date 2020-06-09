@@ -8,6 +8,73 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
 */
 
+
+
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    background-color: rgb(238, 13, 13);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+
+    position: relative;
+    flex: 1 0 22rem;
+    margin: 1rem;
+}
+
+
+  
+  /* Popup arrow */
+  /* .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  } */
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
+
+
+
+
+
 /* Base Styles */
 
 :root {
@@ -60,6 +127,9 @@ img {
     clip: rect(1px, 1px, 1px, 1px);
 }
 
+
+
+
 /* Profile Section */
 
 .profile {
@@ -74,7 +144,6 @@ img {
 
 .profile-image {
     float: left;
-    width: calc(33.333% - 1rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -83,6 +152,9 @@ img {
 
 .profile-image img {
     border-radius: 50%;
+    object-fit: contain;
+    width: 250px;
+    height: 250px;
 }
 
 .profile-user-settings,
@@ -152,6 +224,15 @@ img {
     flex-wrap: wrap;
     margin: -1rem -1rem;
     padding-bottom: 3rem;
+
+    
+}
+/* More flip card css */
+.gallery-item div {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .gallery-item {
@@ -162,10 +243,7 @@ img {
     cursor: pointer;
 }
 
-.gallery-item img {
-    object-fit: contain;
-    filter: grayscale(100%);
-}
+
 
 .gallery-item:hover .gallery-item-info,
 .gallery-item:focus .gallery-item-info {
@@ -211,6 +289,15 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.gallery-item img {
+    object-fit: contain;
+}
+
+
+.gallery-item.home img {
+    filter: grayscale(100%) !important;
 }
 
 /* Loader */

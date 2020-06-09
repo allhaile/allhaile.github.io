@@ -88,20 +88,21 @@
 
 		<div class="gallery">
 
-
-			<div class="gallery-item" tabindex="0">
-
-				<img role="img" src="resources/highlights/berkeley-text.png" class="gallery-image" alt="">
-
-				<div class="gallery-item-info">
-
+  <div class="gallery-item home" tabindex="0" onclick="flip()">
+        
+				<a href="cal.html"><img role="img" src="resources/highlights/berkeley-text.png" class="gallery-image" alt="">
+       
+        <div class="gallery-item-info">
 					<ul>
 						<li class="gallery-item-likes">Bachelor of Arts in Cognitive Science</li>
-					</ul>
+          </ul>
 
-				</div>
+        </div>
+        </a>
 
       </div>
+  <!-- </div> -->
+    
       
       <div class="gallery-item" tabindex="0">
 
@@ -117,7 +118,7 @@
 
       </div>
       
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
 				<img  role="img" src="resources/highlights/consensys_logo-transparent.png" class="gallery-image" alt="">
 
@@ -131,7 +132,7 @@
 
       </div>
 
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
 				<img role="img" src="resources/highlights/Butterfly_Movement_Logo.png" class="gallery-image" alt="">
 
@@ -145,7 +146,7 @@
 
 			</div>
 
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
 				<img role="img" src="resources/highlights/tavtech-logo.png" class="gallery-image" alt="">
 
@@ -159,7 +160,7 @@
 
       </div>
      
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
 				<img role="img" src="resources/highlights/ethereum.jpeg" class="gallery-image" alt="">
 
@@ -173,7 +174,7 @@
 
       </div>
 
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
 				<img role="img" src="resources/highlights/calperformances.jpg" class="gallery-image" alt="">
 
@@ -187,9 +188,9 @@
 
 			</div>
      
-      <div class="gallery-item" tabindex="0">
+      <div class="gallery-item home" tabindex="0">
 
-				<img  role="img" src="img/food-photos/ramen.JPG" class="gallery-image" alt="">
+				<a href="food.html"><img  role="img" src="img/food-photos/ramen.JPG" class="gallery-image" alt="">
 
 				<div class="gallery-item-info">
 
@@ -197,7 +198,8 @@
 						<li class="gallery-item-likes">DIY Foodie</li>
 					</ul>
 
-				</div>
+        </div>
+      </a>
 
 			</div>
 
@@ -275,13 +277,20 @@
 <script type="text/javascript" src="js/jquery.1.11.1.js"></script> 
 <script type="text/javascript" src="js/bootstrap.js"></script> 
 <script type="text/javascript" src="js/SmoothScroll.js"></script> 
-<script type="text/javascript" src="js/easypiechart.js"></script> 
-<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script> 
-<script type="text/javascript" src="js/jquery.isotope.js"></script> 
-<script type="text/javascript" src="js/jquery.counterup.js"></script> 
-<script type="text/javascript" src="js/waypoints.js"></script> 
 <script type="text/javascript" src="js/jqBootstrapValidation.js"></script> 
-<!-- <script type="text/javascript" src="js/contact_me.js"></script>  -->
 <script type="text/javascript" src="js/main.js"></script>
+<script>
+  // When the user clicks on div, open the popup
+  function myFunction() {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+    console.log("Popup is being clicked!")
+  }
+
+  function flip() {
+    $('.gallery-item').toggleClass('flipped');
+    console.log("Flip was called")
+}
+  </script>
 </body>
 </html>
