@@ -8,73 +8,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
 */
 
-
-
-/* Popup container - can be anything you want */
-.popup {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
   
-  /* The actual popup */
-  .popup .popuptext {
-    visibility: hidden;
-    background-color: rgb(238, 13, 13);
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 0;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -80px;
-
-    position: relative;
-    flex: 1 0 22rem;
-    margin: 1rem;
-}
-
-
-  
-  /* Popup arrow */
-  /* .popup .popuptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  } */
-  
-  /* Toggle this class - hide and show the popup */
-  .popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s;
-  }
-  
-  /* Add animation (fade in the popup) */
-  @-webkit-keyframes fadeIn {
-    from {opacity: 0;} 
-    to {opacity: 1;}
-  }
-  
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity:1 ;}
-  }
-
-
-
-
-
 /* Base Styles */
 
 :root {
@@ -130,8 +64,6 @@ img {
     overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
 }
-
-
 
 
 /* Profile Section */
@@ -232,13 +164,6 @@ img {
 
     
 }
-/* More flip card css */
-.gallery-item div {
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    -o-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
 
 .gallery-item {
     position: relative;
@@ -321,18 +246,8 @@ a {
     text-decoration: none;
 }
 
-/* .social {
-	margin-top: 60px;
-	align-items: center;
-} */
 .social ul li {
-    /* flex-basis: calc(100% - 10.7rem); */
-
     display: inline-flex;
-    /* flex-wrap: wrap; */
-    /* padding: 4rem 0; */
-    /* margin: 0 20px;
-    align-items: center; */
 }
 .social i.fa {
 	font-size: 30px;
