@@ -166,6 +166,7 @@ img {
 .profile-bio {
     float: left;
     width: calc(66.666% - 2rem);
+    
 }
 
 .profile-user-settings {
@@ -320,13 +321,18 @@ a {
     text-decoration: none;
 }
 
-.social {
+/* .social {
 	margin-top: 60px;
 	align-items: center;
-}
+} */
 .social ul li {
-	display: inline-block;
-	margin: 0 20px;
+    /* flex-basis: calc(100% - 10.7rem); */
+
+    display: inline-flex;
+    /* flex-wrap: wrap; */
+    /* padding: 4rem 0; */
+    /* margin: 0 20px;
+    align-items: center; */
 }
 .social i.fa {
 	font-size: 30px;
@@ -340,7 +346,7 @@ a {
 
 /* Media Query */
 
-@media screen and (max-width: 40rem) {
+@media screen and (max-width: 30rem) {
     .profile {
         display: flex;
         flex-wrap: wrap;
@@ -388,6 +394,7 @@ a {
     .profile-bio {
         font-size: 1.4rem;
         margin-top: 1.5rem;
+        text-align: center;
     }
 
     .profile-edit-btn,
@@ -417,6 +424,13 @@ a {
 
     .profile-stat-count {
         display: block;
+    }
+
+    .social i.fa {
+        font-size: 20px;
+        padding: 2px 1px;
+        color: black;
+        transition: all 0.5s;
     }
 }
 
@@ -463,6 +477,8 @@ Remove or comment-out the code block below to see how the browser will fall-back
     .gallery {
         width: auto;
         margin: 0;
+        margin-left: inherit;
+        
     }
 
     @media (max-width: 40rem) {
@@ -472,7 +488,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
         }
 
         .profile-image {
-            grid-row: 1 / 2;
+            grid-row: 1 / -1;
         }
 
         .profile-user-settings {
