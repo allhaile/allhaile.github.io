@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/haile-site/static/css/main.5f361e03.chunk.css",
+    "main.js": "/haile-site/static/js/main.c9def29f.chunk.js",
+    "main.js.map": "/haile-site/static/js/main.c9def29f.chunk.js.map",
+    "runtime-main.js": "/haile-site/static/js/runtime-main.f39fd618.js",
+    "runtime-main.js.map": "/haile-site/static/js/runtime-main.f39fd618.js.map",
+    "static/js/2.ad572bae.chunk.js": "/haile-site/static/js/2.ad572bae.chunk.js",
+    "static/js/2.ad572bae.chunk.js.map": "/haile-site/static/js/2.ad572bae.chunk.js.map",
+    "index.html": "/haile-site/index.html",
+    "precache-manifest.ce8075c887f331744906209245751505.js": "/haile-site/precache-manifest.ce8075c887f331744906209245751505.js",
+    "service-worker.js": "/haile-site/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/haile-site/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.ad572bae.chunk.js.LICENSE.txt": "/haile-site/static/js/2.ad572bae.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/haile-site/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f39fd618.js",
+    "static/js/2.ad572bae.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.c9def29f.chunk.js"
+  ]
+}
