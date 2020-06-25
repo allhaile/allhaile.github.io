@@ -26,6 +26,13 @@
   <link href='http://fonts.googleapis.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
 
+    <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+  <!-- Load our React component. -->
+  <script src="like_button.js"></script>
 </head>
 
 <body>
@@ -60,7 +67,7 @@
         <div class="profile-bio">
           <p>Designer | Developer | Dreamer <br><br>
           Currently looking for frontend opportunities<br>
-          Welcome to my site. I am a frontend engineer based in Oakland, CA. I am looking for a team full of open-minded engineers and designers who are willing to take a chance on an eager girl who will contribute not only code but smiles 😁to the team! I am passionate about human-centered design and how to leverage privilege when creating applications for users. Email me if you'd like to talk more! 🥰</p>
+          Welcome to my site. I am a frontend engineer based in Oakland, CA. I am looking for a team full of open-minded engineers and designers who are willing to take a chance on an eager girl who will contribute not only code but smiles 😁to the team! I am passionate about human-centered design and how to leverage privilege when creating applications for users. Email me and let's talk more! 🥰</p>
          </div>
           <div class="social">
             <ul>
@@ -91,6 +98,7 @@
       <img class="gallery-item" role="img" src="resources/highlights/berkeley.png" class="gallery-image"
                 alt="">
       </a> -->
+      <div id="react-card"></div>
       <div class="lightbox-container">
       <a  href="#_" class="lightbox" id=cal>
        <!-- <div class="lightbox-container">  -->

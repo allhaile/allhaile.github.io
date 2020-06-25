@@ -378,12 +378,13 @@ a {
 
     .lightbox:target {
         position: relative;
+        padding: 0;
     }
 }
 
 /** LIGHTBOX MARKUP **/
 
-.lightbox-container a {
+.lightbox-container .lightbox {
 	/** Default lightbox to hidden */
 	display: none;
 
@@ -413,7 +414,7 @@ a {
 	/** Unhide lightbox **/
     display: inline-flex;
      /* position: relative; */
-    top: 50%;
+    /* top: 50%; */
     left: 50%;
   /* bring your own prefixes */
     transform: translate(-50%, -50%);
@@ -437,6 +438,7 @@ a {
 
 .lightbox-container p {
     margin: 1rem;
+    padding: 60px;
 }
 
 
