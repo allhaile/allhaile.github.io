@@ -20,7 +20,7 @@ feed:
   path: feed.xml
 
 exclude:
-  - haile-site
+  - .archive
   - node_modules
   - package.json
   - package-lock.json
