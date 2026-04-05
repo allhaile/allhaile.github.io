@@ -1,0 +1,726 @@
+---
+layout: null
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Editor — Haile API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --border: #E8E4DC;
+    --text: #1A1714;
+    --text-secondary: #5C5650;
+    --text-muted: #9B9489;
+    --accent: #1C4532;
+    --accent-light: #D1FAE5;
+    --code-bg: #F3F1EC;
+    --code-border: #DDD9CF;
+    --pop: #B45309;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .editor-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .editor-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+  .editor-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    margin-top: 1.25rem;
+  }
+
+  input[type="text"], input[type="date"] {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+  }
+  input:focus {
+    border-color: var(--accent);
+  }
+
+  .title-input {
+    font-family: var(--font-display);
+    font-size: 1.6rem !important;
+    padding: 0.75rem !important;
+  }
+
+  .tags-input {
+    font-family: var(--font-mono);
+    font-size: 0.85rem !important;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    margin-top: 1.25rem;
+  }
+  .toolbar button {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .toolbar button:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .toolbar .sep {
+    width: 1px;
+    background: var(--border);
+    margin: 0 0.25rem;
+  }
+
+  .editor-area {
+    min-height: 400px;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0 0 6px 6px;
+    background: var(--surface);
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    outline: none;
+    overflow-y: auto;
+  }
+  .editor-area:focus {
+    border-color: var(--accent);
+  }
+  .editor-area h2 {
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 1.5rem 0 0.5rem;
+  }
+  .editor-area h3 {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 1.25rem 0 0.5rem;
+  }
+  .editor-area blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+  }
+  .editor-area code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+  .editor-area pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .editor-area img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 1rem 0;
+  }
+  .editor-area a { color: var(--accent); }
+  .editor-area strong { color: var(--text); }
+  .editor-area hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .photo-drop {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .photo-drop:hover, .photo-drop.dragover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .photo-drop input { display: none; }
+
+  .photo-gallery {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+  .photo-thumb {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-thumb .photo-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 0.6rem;
+    font-family: var(--font-mono);
+    padding: 0.15rem 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .photo-thumb .photo-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo-thumb .photo-insert {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 9px;
+    font-family: var(--font-mono);
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover {
+    background: #163826;
+  }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text-secondary);
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .output-section {
+    margin-top: 2rem;
+    display: none;
+  }
+  .output-section.visible { display: block; }
+  .output-section h2 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .output-box {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 500px;
+    overflow-y: auto;
+    color: var(--text-secondary);
+  }
+  .copy-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--accent);
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .copy-toast.show { opacity: 1; }
+
+  .workflow-note {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--accent-light);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+  .workflow-note strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="editor-header">
+  <h1>Blog Editor</h1>
+  <p>Write, format, add photos, export markdown. Send to Claude for polish.</p>
+</div>
+
+<label>// title</label>
+<input type="text" id="post-title" class="title-input" placeholder="Try Stuff. Run Experiments.">
+
+<label>// description (one line)</label>
+<input type="text" id="post-desc" placeholder="What this post is about in one sentence.">
+
+<label>// date</label>
+<input type="date" id="post-date">
+
+<label>// tags (comma separated)</label>
+<input type="text" id="post-tags" class="tags-input" placeholder="origin, cognitive-science, life">
+
+<div class="toolbar">
+  <button onclick="fmt('bold')" title="Bold"><b>B</b></button>
+  <button onclick="fmt('italic')" title="Italic"><i>I</i></button>
+  <button onclick="fmt('strikeThrough')" title="Strikethrough"><s>S</s></button>
+  <div class="sep"></div>
+  <button onclick="heading(2)" title="Heading 2">H2</button>
+  <button onclick="heading(3)" title="Heading 3">H3</button>
+  <div class="sep"></div>
+  <button onclick="fmt('insertUnorderedList')" title="Bullet list">list</button>
+  <button onclick="fmt('insertOrderedList')" title="Numbered list">1. list</button>
+  <button onclick="insertBlockquote()" title="Blockquote">" quote</button>
+  <div class="sep"></div>
+  <button onclick="insertCode()" title="Inline code">&lt;code&gt;</button>
+  <button onclick="insertCodeBlock()" title="Code block">```</button>
+  <button onclick="insertHR()" title="Horizontal rule">---</button>
+  <div class="sep"></div>
+  <button onclick="insertLink()" title="Insert link">link</button>
+  <button onclick="document.getElementById('photo-input-inline').click()" title="Insert photo from toolbar">+ photo</button>
+  <input type="file" id="photo-input-inline" accept="image/*" style="display:none" onchange="handleInlinePhoto(event)">
+</div>
+<div id="editor" class="editor-area" contenteditable="true">
+  <p>Start writing here...</p>
+</div>
+
+<label>// photos</label>
+<div class="photo-drop" id="photo-drop" onclick="document.getElementById('photo-input').click()">
+  Drop photos here or click to upload. Then use the [+] button to insert into your post.
+  <input type="file" id="photo-input" accept="image/*" multiple>
+</div>
+<div class="photo-gallery" id="photo-gallery"></div>
+
+<div class="actions">
+  <button class="btn btn-primary" onclick="exportMarkdown()">Export Markdown</button>
+  <button class="btn btn-secondary" onclick="copyMarkdown()">Copy to Clipboard</button>
+  <button class="btn btn-secondary" onclick="downloadMarkdown()">Download .md</button>
+  <button class="btn btn-secondary" onclick="previewPost()">Preview</button>
+</div>
+
+<div class="output-section" id="output-section">
+  <h2>// markdown output</h2>
+  <div class="output-box" id="output-box"></div>
+</div>
+
+<div class="output-section" id="preview-section">
+  <h2>// preview</h2>
+  <div id="preview-box" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem;font-size:1.05rem;line-height:1.8;color:var(--text-secondary);"></div>
+</div>
+
+<div class="workflow-note">
+  <strong>Your workflow:</strong> Write here, add photos, click Export Markdown. Copy the output and send it to Claude with "polish this and publish." Claude will clean up formatting, suggest tags, optimize photo placement, and commit to your site.
+</div>
+
+<div class="copy-toast" id="toast">Copied to clipboard</div>
+
+<script>
+// Set today's date
+document.getElementById('post-date').valueAsDate = new Date();
+
+// Photos storage
+const photos = [];
+
+// Editor focus cleanup
+const editor = document.getElementById('editor');
+editor.addEventListener('focus', function() {
+  if (this.innerHTML.trim() === '<p>Start writing here...</p>') {
+    this.innerHTML = '<p><br></p>';
+    const range = document.createRange();
+    range.selectNodeContents(this.firstChild);
+    range.collapse(true);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+});
+
+// Format commands
+function fmt(cmd) { document.execCommand(cmd, false, null); editor.focus(); }
+
+function heading(level) {
+  document.execCommand('formatBlock', false, `h${level}`);
+  editor.focus();
+}
+
+function insertBlockquote() {
+  document.execCommand('formatBlock', false, 'blockquote');
+  editor.focus();
+}
+
+function insertCode() {
+  const sel = window.getSelection();
+  if (sel.rangeCount) {
+    const range = sel.getRangeAt(0);
+    const code = document.createElement('code');
+    try {
+      range.surroundContents(code);
+    } catch(e) {
+      code.textContent = sel.toString();
+      range.deleteContents();
+      range.insertNode(code);
+    }
+  }
+  editor.focus();
+}
+
+function insertCodeBlock() {
+  const pre = document.createElement('pre');
+  pre.textContent = 'code here';
+  insertNodeAtCursor(pre);
+  editor.focus();
+}
+
+function insertHR() {
+  document.execCommand('insertHorizontalRule');
+  editor.focus();
+}
+
+function insertLink() {
+  const url = prompt('URL:');
+  if (url) document.execCommand('createLink', false, url);
+  editor.focus();
+}
+
+function insertNodeAtCursor(node) {
+  const sel = window.getSelection();
+  if (sel.rangeCount) {
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(node);
+    range.setStartAfter(node);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+}
+
+// Photo handling
+const dropZone = document.getElementById('photo-drop');
+const photoInput = document.getElementById('photo-input');
+const gallery = document.getElementById('photo-gallery');
+
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+photoInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const photo = {
+        name: file.name,
+        data: e.target.result,
+        id: 'photo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5)
+      };
+      photos.push(photo);
+      renderGallery();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleInlinePhoto(event) {
+  const file = event.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const photo = {
+      name: file.name,
+      data: e.target.result,
+      id: 'photo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5)
+    };
+    photos.push(photo);
+    renderGallery();
+    insertPhotoInEditor(photo);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function renderGallery() {
+  gallery.innerHTML = photos.map((p, i) => `
+    <div class="photo-thumb">
+      <img src="${p.data}" alt="${p.name}">
+      <button class="photo-insert" onclick="insertPhotoInEditor(photos[${i}])" title="Insert into post">+</button>
+      <button class="photo-remove" onclick="removePhoto(${i})" title="Remove">&times;</button>
+      <div class="photo-name">${p.name}</div>
+    </div>
+  `).join('');
+}
+
+function removePhoto(i) {
+  photos.splice(i, 1);
+  renderGallery();
+}
+
+function insertPhotoInEditor(photo) {
+  const img = document.createElement('img');
+  img.src = photo.data;
+  img.alt = photo.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+  img.dataset.filename = photo.name;
+  insertNodeAtCursor(img);
+  editor.focus();
+}
+
+// HTML to Markdown conversion
+function htmlToMarkdown(el) {
+  let md = '';
+  el.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      md += node.textContent;
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    const tag = node.tagName.toLowerCase();
+
+    if (tag === 'p') {
+      const inner = htmlToMarkdown(node).trim();
+      if (inner) md += inner + '\n\n';
+    } else if (tag === 'h2') {
+      md += '## ' + htmlToMarkdown(node).trim() + '\n\n';
+    } else if (tag === 'h3') {
+      md += '### ' + htmlToMarkdown(node).trim() + '\n\n';
+    } else if (tag === 'strong' || tag === 'b') {
+      md += '**' + htmlToMarkdown(node) + '**';
+    } else if (tag === 'em' || tag === 'i') {
+      md += '*' + htmlToMarkdown(node) + '*';
+    } else if (tag === 'strike' || tag === 's' || tag === 'del') {
+      md += '~~' + htmlToMarkdown(node) + '~~';
+    } else if (tag === 'code') {
+      md += '`' + node.textContent + '`';
+    } else if (tag === 'pre') {
+      md += '```\n' + node.textContent.trim() + '\n```\n\n';
+    } else if (tag === 'blockquote') {
+      const lines = htmlToMarkdown(node).trim().split('\n');
+      md += lines.map(l => '> ' + l).join('\n') + '\n\n';
+    } else if (tag === 'ul') {
+      node.querySelectorAll(':scope > li').forEach(li => {
+        md += '- ' + htmlToMarkdown(li).trim() + '\n';
+      });
+      md += '\n';
+    } else if (tag === 'ol') {
+      let num = 1;
+      node.querySelectorAll(':scope > li').forEach(li => {
+        md += num + '. ' + htmlToMarkdown(li).trim() + '\n';
+        num++;
+      });
+      md += '\n';
+    } else if (tag === 'a') {
+      const href = node.getAttribute('href') || '';
+      md += '[' + htmlToMarkdown(node) + '](' + href + ')';
+    } else if (tag === 'img') {
+      const alt = node.getAttribute('alt') || '';
+      const filename = node.dataset.filename || alt.replace(/\s+/g, '-').toLowerCase() + '.jpg';
+      md += '![' + alt + '](/img/blog/' + filename + ')\n\n';
+    } else if (tag === 'hr') {
+      md += '---\n\n';
+    } else if (tag === 'br') {
+      md += '\n';
+    } else if (tag === 'div') {
+      const inner = htmlToMarkdown(node).trim();
+      if (inner) md += inner + '\n\n';
+    } else {
+      md += htmlToMarkdown(node);
+    }
+  });
+  return md;
+}
+
+function generateMarkdown() {
+  const title = document.getElementById('post-title').value.trim() || 'Untitled';
+  const desc = document.getElementById('post-desc').value.trim();
+  const date = document.getElementById('post-date').value;
+  const tags = document.getElementById('post-tags').value.trim()
+    .split(',').map(t => t.trim()).filter(Boolean);
+
+  let frontMatter = '---\n';
+  frontMatter += 'layout: post\n';
+  frontMatter += `title: "${title}"\n`;
+  if (desc) frontMatter += `description: "${desc}"\n`;
+  frontMatter += `date: ${date}\n`;
+  if (tags.length) frontMatter += `tags: [${tags.join(', ')}]\n`;
+  frontMatter += '---\n\n';
+
+  const body = htmlToMarkdown(editor).trim();
+
+  let photoNote = '';
+  const imgs = editor.querySelectorAll('img[data-filename]');
+  if (imgs.length > 0) {
+    photoNote = '\n\n<!-- PHOTOS: Save these images to /img/blog/ -->\n';
+    const seen = new Set();
+    imgs.forEach(img => {
+      const fn = img.dataset.filename;
+      if (!seen.has(fn)) {
+        photoNote += `<!-- ${fn} -->\n`;
+        seen.add(fn);
+      }
+    });
+  }
+
+  return frontMatter + body + photoNote;
+}
+
+function exportMarkdown() {
+  const md = generateMarkdown();
+  const box = document.getElementById('output-box');
+  box.textContent = md;
+  document.getElementById('output-section').classList.add('visible');
+  document.getElementById('preview-section').classList.remove('visible');
+  box.scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyMarkdown() {
+  const md = generateMarkdown();
+  navigator.clipboard.writeText(md).then(() => {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+
+function downloadMarkdown() {
+  const md = generateMarkdown();
+  const date = document.getElementById('post-date').value;
+  const title = document.getElementById('post-title').value.trim()
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'untitled';
+  const filename = `${date}-${title}.md`;
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function previewPost() {
+  const preview = document.getElementById('preview-box');
+  preview.innerHTML = editor.innerHTML;
+  document.getElementById('preview-section').classList.add('visible');
+  document.getElementById('output-section').classList.remove('visible');
+  preview.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
