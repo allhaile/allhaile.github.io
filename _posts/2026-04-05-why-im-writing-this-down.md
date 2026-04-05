@@ -1,42 +1,54 @@
 ---
 layout: post
-title: "Why I'm Writing This Down"
-description: "This blog is a dumping ground for everything rattling around in my head — AI, work, life, and what it means to be human through all of it."
+title: "Try Stuff. Run Experiments."
+description: "How art, computers, and cognitive science all led to the same place — and why I'm finally writing about it."
 date: 2026-04-05
-tags: [meta, life, musings]
+tags: [meta, life, experiments]
 ---
 
-I've had a thousand thoughts I never wrote down.
+I've been on the web for 15 years. But it started way before that.
 
-Ideas about the tech I'm building with, the AI that's reshaping how I work, the random life stuff that hits different at 2am — all of it just... lives in my head. Bouncing around, half-formed, never landing anywhere. And I'm tired of that.
+Seventh grade. I got sent to a weekend STEM conference at UOP in Stockton. I came home, took apart the family computer, put it back together, and it turned on. My mom wasn't thrilled about it. But something clicked that day that never really unclicked.
 
-So this is me putting things in writing.
+I grew up in a family of artists. Creativity, colors, shapes, graphic design. That was the air in our house. We had Windows 95. No internet yet, so I played Minesweeper and made things in Paint. I watched my dad make art. That was enough. That was everything.
 
-## What this is
+By high school I was at a technical school where desktop computing was part of the curriculum. At home and at school, I was on computers. Learning software, learning operating systems. I didn't think much of it at the time. My family wasn't in tech. But I had access, and more importantly, I had permission. My parents always said: try stuff, run experiments. See where you land. That's the joy of art.
 
-This blog isn't a carefully curated thought leadership play. It's not a portfolio piece or a personal brand exercise. It's a dumping ground — in the best possible way.
+Art is never finished. It's always iterative. That principle has lived in everything I've built since.
 
-I want a place to think out loud about:
+---
 
-- **AI and what it's doing to us** — not the hype cycle stuff, but the real day-to-day of working alongside tools that are genuinely changing how I build things. What it feels like. What I'm worried about. What I'm excited about.
-- **Work and craft** — Frontend engineering, design decisions, the code I'm writing, the problems I'm stuck on. The messy middle of building stuff, not just the polished end result.
-- **Life as a human** — The stuff that doesn't fit in a commit message. Travel, food, identity, growing up, figuring things out in real time.
-- **The intersection of all of it** — Because honestly, the lines between "work me" and "life me" and "person trying to make sense of AI me" are getting blurrier by the day.
+I went to college ready to study computer science. And then I found out it was a lot more theoretical than I wanted. I needed application. I needed something more hands-on. So I pivoted into cognitive science.
 
-## Why now
+Cognitive science is an interdisciplinary degree. Six fields, one question:
 
-I've been meaning to do this for years. I've started blogs before. I've written drafts that never shipped. The pattern is always the same: I overthink it, I want it to be perfect, and then I don't publish anything.
+- Computer Science
+- Neuroscience
+- Philosophy
+- Psychology
+- Anthropology
+- Linguistics
 
-This time I'm doing it differently. The bar is: did I think about it? Then I can write about it. No minimum word count. No editorial calendar. No waiting until I have a fully formed take.
+All of them studying the mind from different angles, building different assumptions, operating in different contexts. That's exactly the kind of learning I was hungry for.
 
-Some posts will be long. Some will be three paragraphs. Some might just be a question I can't stop thinking about.
+Those classes were hard. Berkeley is no joke. But it confirmed something for me: I genuinely love the space where humans and computers meet. HCI (human-computer interaction) wasn't just a field of study. It was a lens that made everything else make sense.
 
-## The deal I'm making with myself
+On the first day of Cog Sci 1, the professor said something that I still think about: *"We use the brain to study itself, so how do we know it's not lying to us?"*
 
-Write more than I'm comfortable with. Publish before it feels ready. Let ideas be half-baked sometimes. Trust that the act of writing is the point — not the output.
+That line created a thought loop that hasn't stopped. You don't know what you don't know. But you can know. And the brain is built for that. There are methods. There are ways in. Lean into them.
 
-If you're reading this, cool. If nobody reads this, also cool. This is for me first. But if something I write resonates with you, I'd love to hear about it.
+My mom always said: *"All that you need is within you right now."*
 
-Let's see where this goes.
+I had the woo-woo version and the neuroscience version of the same idea living side by side. Turns out they say the same thing.
 
-— Haile
+---
+
+All of these pieces (the art, the computers, the cognitive science, the HCI rabbit hole) have been accumulating. And now I'm at a point where the overlaps are undeniable.
+
+This blog is where I'm going to put all of it. Humans and technology. Experiments I'm running. Things that didn't work. Things that did. How it all connects.
+
+Right now I'm running about six different experiments at once, all in different contexts, all with some kind of overlap. It's been quite the ride.
+
+I'm glad you're here for it.
+
+How many experiments are you running right now?
