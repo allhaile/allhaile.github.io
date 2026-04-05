@@ -1,0 +1,14 @@
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-status">
+      <span class="status-indicator"></span>
+      <span class="status-text">200 OK</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/{{ site.author.github }}" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/{{ site.author.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+    </div>
+    <p class="footer-copy">&copy; {{ 'now' | date: "%Y" }} {{ site.author.name }} &mdash; {{ site.title }} v2.0</p>
+  </div>
+</footer>

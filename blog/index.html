@@ -1,0 +1,30 @@
+---
+layout: default
+title: Blog
+description: "Thoughts on frontend development, design, and building for the web."
+---
+
+<div class="blog-header">
+  <h1>Blog</h1>
+  <p>Thoughts on frontend development, design, and building for the web.</p>
+</div>
+
+<ul class="blog-list">
+  {% for post in site.posts %}
+    <li class="blog-item">
+      <a href="{{ post.url | relative_url }}">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        <h2>{{ post.title }}</h2>
+        {% if post.description %}
+          <p>{{ post.description }}</p>
+        {% elsif post.excerpt %}
+          <p>{{ post.excerpt | strip_html | truncate: 160 }}</p>
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% if site.posts.size == 0 %}
+  <p class="blog-empty">// no posts yet — check back soon</p>
+{% endif %}
