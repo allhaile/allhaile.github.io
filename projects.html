@@ -20,6 +20,9 @@ description: "Things I've shipped — and things I'm building."
         {% endfor %}
       </span>
       <p>{{ project.description }}</p>
+      {% if project.url %}
+        <a href="{{ project.url }}" class="project-link" target="_blank" rel="noopener">&rarr; visit</a>
+      {% endif %}
     </div>
   </div>
   {% endfor %}

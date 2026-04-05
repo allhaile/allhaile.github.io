@@ -4,3 +4,11 @@
     - jekyll
     - github-pages
     - css
+
+- name: Hungry Highly
+  description: "Food, travel, and hosted dinner series. Eating my way through cities and bringing people together over meals. The other half of eat curious."
+  url: "https://www.youtube.com/@hungryhighly"
+  tags:
+    - food
+    - travel
+    - youtube
