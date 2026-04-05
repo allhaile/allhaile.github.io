@@ -4,15 +4,16 @@ title: Home
 ---
 
 <section class="hero">
-  <div class="hero-badge">
+  <div class="hero-status">
     <span class="dot"></span>
-    available for work
+    GET /haile &mdash; 200 OK
   </div>
-  <h1>Hi, I'm <span class="highlight">Haile</span>.<br>I build things for the&nbsp;web.</h1>
+  <h1>Hi, I'm Haile.</h1>
   <p class="hero-sub">
-    Frontend engineer from Oakland, CA. I care about clean interfaces,
-    thoughtful design, and shipping products that people actually want to use.
+    Web engineer. Cognitive science graduate. I build interfaces
+    that make technical things feel intuitive.
   </p>
+  <p class="hero-tagline">// eat curious. build curious.</p>
 </section>
 
 <section class="endpoints">
@@ -21,25 +22,30 @@ title: Home
   <div class="endpoint-card">
     <span class="endpoint-method method-get">GET</span>
     <span class="endpoint-path">/haile/about</span>
-    <p class="endpoint-desc">UC Berkeley grad (Cognitive Science). Frontend engineer. Creative technologist and lifelong learner.</p>
+    <p class="endpoint-desc">UC Berkeley, B.A. Cognitive Science. Now a web engineer at Slack building developer-facing experiences. I came to engineering through the human side — how people process information, form mental models, and get lost in interfaces. That lens doesn't leave you.</p>
   </div>
 
   <div class="endpoint-card">
     <span class="endpoint-method method-get">GET</span>
     <span class="endpoint-path">/haile/skills</span>
-    <p class="endpoint-desc">JavaScript, React, HTML/CSS, Node.js, Solidity, UI/UX Design, Figma, Tailwind CSS</p>
+    <p class="endpoint-desc">JavaScript · React · Astro · Tailwind CSS · HTML/CSS · Node.js · Figma · Git · Vite · TypeScript</p>
   </div>
 
   <div class="endpoint-card">
     <span class="endpoint-method method-get">GET</span>
-    <span class="endpoint-path">/haile/interests</span>
-    <p class="endpoint-desc">Blockchain, food photography, travel (11 countries and counting), writing, and good conversation.</p>
+    <span class="endpoint-path">/haile/now</span>
+    <p class="endpoint-desc">Working on: Haile API v2 (this site). Writing about building with AI tools. Exploring the gap between cognitive load theory and component design. Currently at Slack.</p>
   </div>
 
   <div class="endpoint-card">
     <span class="endpoint-method method-post">POST</span>
     <span class="endpoint-path">/haile/contact</span>
-    <p class="endpoint-desc">Reach out on <a href="https://linkedin.com/in/haileshavers" target="_blank" rel="noopener">LinkedIn</a> or check out my work on <a href="https://github.com/allhaile" target="_blank" rel="noopener">GitHub</a>.</p>
+    <p class="endpoint-desc">
+      <a href="https://linkedin.com/in/haileshavers" target="_blank" rel="noopener">LinkedIn</a> ·
+      <a href="https://github.com/allhaile" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://substack.com/@allhaile" target="_blank" rel="noopener">Substack</a> (@allhaile)
+      — Or just email. Reach out.
+    </p>
   </div>
 </section>
 
@@ -50,11 +56,13 @@ title: Home
   </div>
   <div class="response-body">
     <span class="json-bracket">{</span><br>
-    &nbsp;&nbsp;<span class="json-key">"countries_visited"</span>: <span class="json-number">11</span>,<br>
-    &nbsp;&nbsp;<span class="json-key">"companies"</span>: <span class="json-number">4</span>,<br>
+    &nbsp;&nbsp;<span class="json-key">"role"</span>: <span class="json-string">"Web Experience Engineer"</span>,<br>
+    &nbsp;&nbsp;<span class="json-key">"company"</span>: <span class="json-string">"Slack"</span>,<br>
     &nbsp;&nbsp;<span class="json-key">"degree"</span>: <span class="json-string">"B.A. Cognitive Science, UC Berkeley"</span>,<br>
     &nbsp;&nbsp;<span class="json-key">"location"</span>: <span class="json-string">"Oakland, CA"</span>,<br>
-    &nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"building cool stuff"</span><br>
+    &nbsp;&nbsp;<span class="json-key">"countries_visited"</span>: <span class="json-number">11</span>,<br>
+    &nbsp;&nbsp;<span class="json-key">"currently_building"</span>: <span class="json-string">"haile-api-v2"</span>,<br>
+    &nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-string">"shipping"</span><br>
     <span class="json-bracket">}</span>
   </div>
 </section>
@@ -64,8 +72,8 @@ title: Home
   <div class="exp-grid">
     <div class="exp-card">
       <h3>Slack</h3>
-      <span class="exp-role">recruiting_coordinator</span>
-      <p class="exp-desc">Helped scale one of tech's most beloved teams during a period of rapid growth.</p>
+      <span class="exp-role">web_experience_engineer</span>
+      <p class="exp-desc">Platform engineering — developer-facing web experiences, design systems, reusable components, and the tooling that makes other engineers faster.</p>
     </div>
     <div class="exp-card">
       <h3>ConsenSys</h3>
@@ -92,8 +100,12 @@ title: Home
     <img src="{{ '/img/portfolio/recipeasy-home-small.png' | relative_url }}" alt="RecipEasy">
     <div class="project-info">
       <h3>RecipEasy</h3>
-      <span class="project-tech">React / Node.js / MongoDB</span>
-      <p>A recipe finder and social platform that helps you discover meals based on what's in your kitchen.</p>
+      <span class="project-tech">
+        <span class="stack-tag">react</span>
+        <span class="stack-tag">node.js</span>
+        <span class="stack-tag">mongodb</span>
+      </span>
+      <p>Recipe discovery app that generates meal ideas based on what's already in your kitchen. Built to reduce the "what's for dinner" decision fatigue.</p>
     </div>
   </div>
 
@@ -101,8 +113,11 @@ title: Home
     <img src="{{ '/img/portfolio/awkotaco-home.png' | relative_url }}" alt="AwkoTaco">
     <div class="project-info">
       <h3>AwkoTaco</h3>
-      <span class="project-tech">JavaScript / REST APIs</span>
-      <p>A conversation helper web app that generates random icebreakers and fun talking points.</p>
+      <span class="project-tech">
+        <span class="stack-tag">javascript</span>
+        <span class="stack-tag">rest-api</span>
+      </span>
+      <p>Conversation starter generator. Pulls from random APIs to produce icebreakers for people who hate small talk. Lightweight and genuinely useful at parties.</p>
     </div>
   </div>
 
@@ -110,8 +125,11 @@ title: Home
     <img src="{{ '/img/portfolio/butterfly-small.jpg' | relative_url }}" alt="The Butterfly Movement">
     <div class="project-info">
       <h3>The Butterfly Movement</h3>
-      <span class="project-tech">Branding / Design</span>
-      <p>Complete branding and visual identity work for a community-driven creative movement.</p>
+      <span class="project-tech">
+        <span class="stack-tag">branding</span>
+        <span class="stack-tag">figma</span>
+      </span>
+      <p>Full visual identity system for a community creative movement. Brand strategy, logo, color, type — the whole system.</p>
     </div>
   </div>
 </section>
