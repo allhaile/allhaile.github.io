@@ -49,7 +49,7 @@ class TestJekyllConfig < Minitest::Test
   end
 
   def test_url_is_github_pages
-    assert_equal "https://allhaile.github.io", @config["url"]
+    assert_equal "https://haileshavers.com", @config["url"]
   end
 
   def test_plugins_include_feed
@@ -271,7 +271,7 @@ class TestRSSFeed < Minitest::Test
   def test_channel_has_link
     link = @doc.root.elements["channel/link"]
     assert link, "Channel should have a <link>"
-    assert_match %r{allhaile\.github\.io}, link.text
+    assert_match %r{haileshavers\.com}, link.text
   end
 
   def test_has_items
