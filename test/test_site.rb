@@ -153,7 +153,8 @@ class TestHomepage < Minitest::Test
     link_texts = links.map(&:text).map(&:strip)
     assert_includes link_texts, "home"
     assert_includes link_texts, "blog"
-    assert_includes link_texts, "rss"
+    assert_includes link_texts, "projects"
+    assert_includes link_texts, "tools"
   end
 
   def test_has_footer
@@ -185,7 +186,7 @@ class TestBlogIndex < Minitest::Test
   def test_has_blog_header
     header = @doc.css(".blog-header h1")
     refute_empty header, "Blog page should have a header"
-    assert_equal "Blog", header.text.strip
+    assert_equal "Writing things down.", header.text.strip
   end
 
   def test_lists_posts

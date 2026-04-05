@@ -1,24 +1,34 @@
 ---
 layout: default
 title: Blog
-description: "Thoughts on frontend development, design, and building for the web."
+description: "Frontend, AI tools, cognitive science, and whatever's rattling around. Honest documentation of the build."
 ---
 
 <div class="blog-header">
-  <h1>Blog</h1>
-  <p>Thoughts on frontend development, design, and building for the web.</p>
+  <p class="page-endpoint">GET /blog</p>
+  <h1>Writing things down.</h1>
+  <p>Frontend, AI tools, cognitive science, and whatever's rattling around. Honest documentation of the build.</p>
 </div>
 
 <ul class="blog-list">
   {% for post in site.posts %}
     <li class="blog-item">
       <a href="{{ post.url | relative_url }}">
-        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        <div class="blog-item-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        </div>
         <h2>{{ post.title }}</h2>
         {% if post.description %}
           <p>{{ post.description }}</p>
         {% elsif post.excerpt %}
           <p>{{ post.excerpt | strip_html | truncate: 160 }}</p>
+        {% endif %}
+        {% if post.tags.size > 0 %}
+          <div class="blog-tags">
+            {% for tag in post.tags %}
+              <span class="stack-tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
         {% endif %}
       </a>
     </li>

@@ -6,8 +6,12 @@
     <div class="nav-links">
       <a href="{{ '/' | relative_url }}" class="nav-link{% if page.url == '/' %} active{% endif %}">home</a>
       <a href="{{ '/blog/' | relative_url }}" class="nav-link{% if page.url contains '/blog' %} active{% endif %}">blog</a>
-      <a href="https://github.com/{{ site.author.github }}" class="nav-link" target="_blank" rel="noopener">github</a>
-      <a href="{{ '/feed.xml' | relative_url }}" class="nav-link" title="RSS Feed">rss</a>
+      <a href="{{ '/projects/' | relative_url }}" class="nav-link{% if page.url == '/projects/' %} active{% endif %}">projects</a>
+      <a href="{{ '/tools/' | relative_url }}" class="nav-link{% if page.url == '/tools/' %} active{% endif %}">tools</a>
+    </div>
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      <span class="status-text">200 OK</span>
     </div>
   </div>
 </nav>
