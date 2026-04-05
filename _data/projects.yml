@@ -1,0 +1,6 @@
+- name: Haile API
+  description: "My personal site structured as API documentation. Every page is an endpoint. Built to show how I think, not just what I've done."
+  tags:
+    - jekyll
+    - github-pages
+    - css

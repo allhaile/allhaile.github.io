@@ -1,0 +1,32 @@
+---
+layout: default
+title: Tags
+description: "Browse posts and projects by tag."
+---
+
+<section style="padding: 4rem 0 2rem;">
+  <p class="page-endpoint">GET /tags</p>
+  <h1 class="page-title">All tags.</h1>
+</section>
+
+<div class="tag-cloud">
+  {% assign all_tags = "" | split: "" %}
+  {% for post in site.posts %}
+    {% for tag in post.tags %}
+      {% unless all_tags contains tag %}
+        {% assign all_tags = all_tags | push: tag %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
+  {% for project in site.data.projects %}
+    {% for tag in project.tags %}
+      {% unless all_tags contains tag %}
+        {% assign all_tags = all_tags | push: tag %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
+  {% assign sorted_tags = all_tags | sort %}
+  {% for tag in sorted_tags %}
+    <a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" class="stack-tag" style="font-size: 0.85rem; padding: 0.3rem 0.7rem; margin-bottom: 0.5rem;">{{ tag }}</a>
+  {% endfor %}
+</div>

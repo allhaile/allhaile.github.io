@@ -23,14 +23,14 @@ description: "Frontend, AI tools, cognitive science, and whatever's rattling aro
         {% elsif post.excerpt %}
           <p>{{ post.excerpt | strip_html | truncate: 160 }}</p>
         {% endif %}
-        {% if post.tags.size > 0 %}
-          <div class="blog-tags">
-            {% for tag in post.tags %}
-              <span class="stack-tag">{{ tag }}</span>
-            {% endfor %}
-          </div>
-        {% endif %}
       </a>
+      {% if post.tags.size > 0 %}
+        <div class="blog-tags">
+          {% for tag in post.tags %}
+            <a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" class="stack-tag">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
     </li>
   {% endfor %}
 </ul>

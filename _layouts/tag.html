@@ -1,0 +1,44 @@
+---
+layout: default
+---
+<section style="padding: 4rem 0 2rem;">
+  <p class="page-endpoint">GET /tags/{{ page.tag }}</p>
+  <h1 class="page-title">Tagged: {{ page.tag }}</h1>
+</section>
+
+<ul class="blog-list">
+  {% assign tagged_posts = site.posts | where_exp: "post", "post.tags contains page.tag" %}
+  {% for post in tagged_posts %}
+    <li class="blog-item">
+      <a href="{{ post.url | relative_url }}">
+        <div class="blog-item-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        </div>
+        <h2>{{ post.title }}</h2>
+        {% if post.description %}
+          <p>{{ post.description }}</p>
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% assign tagged_projects = site.data.projects | where_exp: "project", "project.tags contains page.tag" %}
+{% if tagged_projects.size > 0 %}
+<section class="projects" style="margin-top: 2rem;">
+  <h2>// projects</h2>
+  {% for project in tagged_projects %}
+    <div class="project-card" style="flex-direction: column;">
+      <div class="project-info">
+        <h3>{{ project.name }}</h3>
+        <span class="project-tech">
+          {% for tag in project.tags %}
+            <a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" class="stack-tag">{{ tag }}</a>
+          {% endfor %}
+        </span>
+        <p>{{ project.description }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+{% endif %}
