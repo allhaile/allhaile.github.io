@@ -10,7 +10,7 @@ I've been on the web for 15 years. But it started way before that.
 
 Seventh grade. I got sent to a weekend STEM conference at UOP in Stockton. I came home, took apart the family computer, put it back together, and it turned on. My mom wasn't thrilled about it. But something clicked that day that never really unclicked.
 
-I grew up in a family of artists. Creativity, colors, shapes, graphic design. That was the air in our house. We had Windows 95. No internet yet, so I played Minesweeper and made things in Paint. I watched my dad make art. That was enough. That was everything.
+I grew up in a family of artists. Creativity, colors, shapes, graphic design. That was the air in our house. We had Windows 95. No internet yet, so I played Minesweeper and made things in Paint. I watched my dad make art. That was enough.
 
 By high school I was at a technical school where desktop computing was part of the curriculum. At home and at school, I was on computers. Learning software, learning operating systems. I didn't think much of it at the time. My family wasn't in tech. But I had access, and more importantly, I had permission. My parents always said: try stuff, run experiments. See where you land. That's the joy of art.
 
