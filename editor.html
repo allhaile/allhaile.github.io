@@ -8,6 +8,7 @@ sitemap: false
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blog Editor — Haile API</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -353,10 +354,72 @@ sitemap: false
     color: var(--accent);
   }
   .workflow-note strong { font-weight: 600; }
+
+  /* Password gate */
+  .auth-gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-box {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+  }
+  .auth-box h1 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .auth-box p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .auth-box input[type="password"] {
+    width: 100%;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    text-align: center;
+  }
+  .auth-box input[type="password"]:focus { border-color: var(--accent); }
+  .auth-box .auth-error {
+    color: #b91c1c;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    margin-top: 0.5rem;
+    display: none;
+  }
+  .auth-box button {
+    margin-top: 1rem;
+    width: 100%;
+  }
+  #editor-content { display: none; }
 </style>
 </head>
 <body>
 
+<!-- Password gate -->
+<div class="auth-gate" id="auth-gate">
+  <div class="auth-box">
+    <h1>{ haile.api } editor</h1>
+    <p>This endpoint requires authentication.</p>
+    <input type="password" id="auth-password" placeholder="password" autofocus
+      onkeydown="if(event.key==='Enter')authenticate()">
+    <p class="auth-error" id="auth-error">401 Unauthorized</p>
+    <button class="btn btn-primary" onclick="authenticate()">authenticate</button>
+  </div>
+</div>
+
+<div id="editor-content">
 <div class="editor-header">
   <h1>Blog Editor</h1>
   <p>Write, format, add photos, export markdown. Send to Claude for polish.</p>
@@ -720,6 +783,47 @@ function previewPost() {
   document.getElementById('preview-section').classList.add('visible');
   document.getElementById('output-section').classList.remove('visible');
   preview.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+</div><!-- /editor-content -->
+
+<script>
+// SHA-256 hash comparison — password is never stored in plaintext
+// To change: run in browser console:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('newpassword'))
+//     .then(b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join(''))
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Pre-computed SHA-256 of "haileapi"
+const EXPECTED_HASH = '97f9672755386111d1187cd7d0c8b47c02d5df4cc2866aabd643ae64b64c88fa';
+
+async function authenticate() {
+  const input = document.getElementById('auth-password').value;
+  const hash = await sha256(input);
+
+  if (hash === EXPECTED_HASH) {
+    sessionStorage.setItem('haile-editor-auth', 'true');
+    showEditor();
+  } else {
+    document.getElementById('auth-error').style.display = 'block';
+    document.getElementById('auth-password').value = '';
+    document.getElementById('auth-password').focus();
+  }
+}
+
+function showEditor() {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('editor-content').style.display = 'block';
+}
+
+// Check session on load
+if (sessionStorage.getItem('haile-editor-auth') === 'true') {
+  showEditor();
 }
 </script>
 </body>
