@@ -5,9 +5,9 @@
 
 :root {
   /* Backgrounds */
-  --color-bg:       #FAF9F6;
+  --color-bg:       #FFFFFF;
   --color-surface:  #FFFFFF;
-  --color-border:   #E8E4DC;
+  --color-border:   #E5E5E5;
 
   /* Text */
   --color-text-primary:   #1A1714;
@@ -24,8 +24,8 @@
   --color-pop-light:      #FEF3C7;
 
   /* Code */
-  --color-code-bg:        #F3F1EC;
-  --color-code-border:    #DDD9CF;
+  --color-code-bg:        #F5F5F5;
+  --color-code-border:    #E5E5E5;
 
   /* HTTP Method Colors */
   --color-get:    #1C4532;
@@ -33,8 +33,8 @@
   --color-status: #166534;
 
   /* Typography */
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body:    'DM Sans', sans-serif;
+  --font-display: 'Inter', -apple-system, sans-serif;
+  --font-body:    'Inter', -apple-system, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
   --radius: 8px;
@@ -82,7 +82,7 @@ img {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 249, 246, 0.92);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -192,16 +192,16 @@ img {
 
 .hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
   color: var(--color-text-primary);
 }
 
 .hero-sub {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   color: var(--color-text-secondary);
   max-width: 560px;
   line-height: 1.7;
@@ -479,16 +479,16 @@ img {
 
 .page-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: 0.75rem;
   color: var(--color-text-primary);
 }
 
 .page-sub {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--color-text-secondary);
   max-width: 600px;
   line-height: 1.7;
@@ -580,9 +580,9 @@ img {
 
 .blog-header h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
   margin-bottom: 0.5rem;
   color: var(--color-text-primary);
 }
@@ -638,8 +638,8 @@ img {
 
 .blog-item h2 {
   font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 400;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin-bottom: 0.3rem;
   line-height: 1.3;
 }
@@ -703,10 +703,10 @@ img {
 
 .post-title {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 400;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--color-text-primary);
 }
 
@@ -718,8 +718,8 @@ img {
 }
 
 .post-content {
-  font-size: 1.125rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.75;
   color: var(--color-text-secondary);
 }
 
@@ -785,7 +785,7 @@ img {
   margin: 1.5rem 0;
   color: var(--color-text-secondary);
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 .post-content img {
