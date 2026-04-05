@@ -41,10 +41,7 @@ title: Home
     <span class="endpoint-method method-post">POST</span>
     <span class="endpoint-path">/haile/contact</span>
     <p class="endpoint-desc">
-      <a href="https://linkedin.com/in/haileshavers" target="_blank" rel="noopener">LinkedIn</a> ·
-      <a href="https://github.com/allhaile" target="_blank" rel="noopener">GitHub</a> ·
-      <a href="https://substack.com/@allhaile" target="_blank" rel="noopener">Substack</a> (@allhaile)
-      — Or just email. Reach out.
+      Reach out on <a href="https://linkedin.com/in/haileshavers" target="_blank" rel="noopener">LinkedIn</a>.
     </p>
   </div>
 </section>
@@ -96,15 +93,17 @@ title: Home
 <section class="projects">
   <h2>// projects</h2>
 
+  {% for project in site.data.projects %}
   <div class="project-card" style="flex-direction: column;">
     <div class="project-info">
-      <h3>Haile API</h3>
+      <h3>{{ project.name }}</h3>
       <span class="project-tech">
-        <span class="stack-tag">jekyll</span>
-        <span class="stack-tag">github-pages</span>
-        <span class="stack-tag">css</span>
+        {% for tag in project.tags %}
+          <a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" class="stack-tag">{{ tag }}</a>
+        {% endfor %}
       </span>
-      <p>My personal site structured as API documentation. Every page is an endpoint. Built to show how I think, not just what I've done.</p>
+      <p>{{ project.description }}</p>
     </div>
   </div>
+  {% endfor %}
 </section>

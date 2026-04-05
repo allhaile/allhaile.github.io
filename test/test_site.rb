@@ -195,7 +195,7 @@ class TestBlogIndex < Minitest::Test
   end
 
   def test_post_links_are_valid
-    @doc.css(".blog-item a").each do |link|
+    @doc.css(".blog-item > a").each do |link|
       href = link["href"]
       assert_match %r{^/blog/\d{4}/\d{2}/\d{2}/}, href, "Post link should match permalink pattern: #{href}"
     end

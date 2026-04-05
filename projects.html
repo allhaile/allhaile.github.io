@@ -10,15 +10,17 @@ description: "Things I've shipped — and things I'm building."
 </section>
 
 <section class="projects">
+  {% for project in site.data.projects %}
   <div class="project-card" style="flex-direction: column;">
     <div class="project-info">
-      <h3>Haile API</h3>
+      <h3>{{ project.name }}</h3>
       <span class="project-tech">
-        <span class="stack-tag">jekyll</span>
-        <span class="stack-tag">github-pages</span>
-        <span class="stack-tag">css</span>
+        {% for tag in project.tags %}
+          <a href="{{ '/tags/' | append: tag | append: '/' | relative_url }}" class="stack-tag">{{ tag }}</a>
+        {% endfor %}
       </span>
-      <p>My personal site structured as API documentation. Every page is an endpoint. Built to show how I think, not just what I've done.</p>
+      <p>{{ project.description }}</p>
     </div>
   </div>
+  {% endfor %}
 </section>
