@@ -1,0 +1,13 @@
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="{{ '/' | relative_url }}" class="nav-logo">
+      <span class="nav-logo-bracket">{</span> haile<span class="nav-logo-dot">.</span>api <span class="nav-logo-bracket">}</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ '/' | relative_url }}" class="nav-link{% if page.url == '/' %} active{% endif %}">home</a>
+      <a href="{{ '/blog/' | relative_url }}" class="nav-link{% if page.url contains '/blog' %} active{% endif %}">blog</a>
+      <a href="https://github.com/{{ site.author.github }}" class="nav-link" target="_blank" rel="noopener">github</a>
+      <a href="{{ '/feed.xml' | relative_url }}" class="nav-link" title="RSS Feed">rss</a>
+    </div>
+  </div>
+</nav>

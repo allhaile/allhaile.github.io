@@ -1,0 +1,40 @@
+title: Haile API
+description: "The developer interface for Haile Shavers — frontend engineer, creative technologist, and dreamer."
+url: "https://haileshavers.com"
+baseurl: ""
+author:
+  name: Haile Shavers
+  email: ""
+  github: allhaile
+  linkedin: haileshavers
+
+permalink: /blog/:year/:month/:day/:title/
+timezone: America/Los_Angeles
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+feed:
+  path: feed.xml
+
+exclude:
+  - haile-site
+  - node_modules
+  - package.json
+  - package-lock.json
+  - yarn.lock
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+
+collections:
+  posts:
+    output: true
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
