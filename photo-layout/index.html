@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo Layout Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: settings rail on the left, live preview fills the rest; stacks to one column on phones */
+  --bg:#eef2ef;
+  --surface:#ffffff;
+  --ink:#18211c;
+  --muted:#5b6961;
+  --line:#d6dfd9;
+  --accent:#2f5d46;
+  --accent-ink:#ffffff;
+  --accent-soft:#e1ece5;
+  --warn:#8a5200;
+  --warn-soft:#fbefd9;
+  --stage:#dfe6e1;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111613; --surface:#18201b; --ink:#e4ebe6; --muted:#98a69e; --line:#2b3530;
+    --accent:#86c4a0; --accent-ink:#0e1912; --accent-soft:#1e3226; --warn:#f0b45a; --warn-soft:#33260e;
+    --stage:#0b0f0d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#18201b; --ink:#e4ebe6; --muted:#98a69e; --line:#2b3530;
+  --accent:#86c4a0; --accent-ink:#0e1912; --accent-soft:#1e3226; --warn:#f0b45a; --warn-soft:#33260e;
+  --stage:#0b0f0d; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:360px 1fr;gap:20px;padding:20px;min-height:100%}
+@media (max-width:880px){.app{grid-template-columns:1fr;padding:16px}}
+
+.rail{display:flex;flex-direction:column;gap:14px}
+.brand h1{font:700 26px/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+.brand p{margin:6px 0 0;color:var(--muted);font-size:14px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card h2{font:600 13px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0}
+.hint{font-size:13px;color:var(--muted);margin:0}
+
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:14px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:4px;align-items:center}
+.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+.drop strong{font-weight:600}
+.drop input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+.photos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto}
+.list-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}
+.link-btn{background:none;border:none;color:var(--accent);font-weight:600;cursor:pointer;padding:2px 4px;border-radius:4px}
+.link-btn:hover{text-decoration:underline}
+.photo{display:grid;grid-template-columns:22px 44px 1fr auto;gap:8px;align-items:center;padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.photo.dragging{opacity:.45}
+.photo.over{border-color:var(--accent);background:var(--accent-soft)}
+.photo .num{font:600 12px/1 var(--body);color:var(--muted);text-align:center;font-variant-numeric:tabular-nums;cursor:grab}
+.photo img{width:44px;height:44px;object-fit:cover;border-radius:5px;display:block}
+.photo .name{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.photo .dims{display:block;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.photo .tools{display:flex;gap:2px}
+.icon-btn{border:1px solid transparent;background:none;border-radius:6px;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.icon-btn:hover{background:var(--accent-soft);color:var(--ink)}
+.icon-btn:disabled{opacity:.3;cursor:default;background:none}
+.tag{font-size:11px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:1px 6px;border-radius:99px;margin-left:4px}
+
+.seg{display:grid;gap:6px}
+.seg.cols-4{grid-template-columns:repeat(4,1fr)}
+.seg.cols-2{grid-template-columns:repeat(2,1fr)}
+.seg.cols-3{grid-template-columns:repeat(3,1fr)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{border:1px solid var(--line);border-radius:8px;padding:8px 6px;text-align:center;cursor:pointer;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.2}
+.seg label:hover{border-color:var(--accent)}
+.seg input:checked + label{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent);font-weight:600}
+.seg input:focus-visible + label{outline:2px solid var(--accent);outline-offset:2px}
+.seg svg{width:30px;height:22px;display:block}
+.seg svg rect{fill:currentColor;opacity:.75}
+.seg small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+
+.row{display:flex;align-items:center;gap:10px}
+.row label{font-size:14px}
+.row .val{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;min-width:48px;text-align:right}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.swatches{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.swatch{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+input[type=color]{width:28px;height:28px;border:1px solid var(--line);border-radius:50%;padding:0;background:none;cursor:pointer}
+input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+input[type=color]::-webkit-color-swatch{border:none;border-radius:50%}
+.check{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px}
+.text{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface)}
+
+.main{display:flex;flex-direction:column;gap:12px;min-width:0;align-self:start;position:sticky;top:20px}
+@media (max-width:880px){.main{position:static}}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:12px;color:var(--muted)}
+.stat b{font-weight:600;font-size:15px}
+.primary{margin-left:auto;background:var(--accent);color:var(--accent-ink);border:none;border-radius:9px;padding:10px 18px;font-weight:600;cursor:pointer;display:flex;gap:8px;align-items:center}
+.primary:hover{filter:brightness(1.08)}
+.primary:disabled{opacity:.5;cursor:default}
+.notes{display:flex;flex-direction:column;gap:6px}
+.note{font-size:13px;padding:8px 10px;border-radius:8px;background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--accent-soft);color:var(--ink)}
+.status{font-size:13px;color:var(--muted);min-height:1.5em}
+
+.stage{min-height:340px;background:var(--stage);border-radius:12px;display:grid;place-items:center;padding:20px;overflow:hidden;position:relative}
+#preview{display:block;max-width:100%;box-shadow:0 1px 3px rgba(0,0,0,.18),0 8px 24px rgba(0,0,0,.10);touch-action:none}
+#preview.pannable{cursor:grab}
+#preview.panning{cursor:grabbing}
+
+.overlay{position:fixed;inset:0;background:color-mix(in srgb,var(--accent) 22%,transparent);border:3px dashed var(--accent);display:none;place-items:center;z-index:10;font:700 24px var(--display);color:var(--ink)}
+.overlay.on{display:grid}
+
+.fallback{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;place-items:center;z-index:20;padding:20px}
+.fallback.on{display:grid}
+.fallback .box{background:var(--surface);border-radius:12px;padding:16px;max-width:min(900px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.fallback img{max-width:100%;height:auto;display:block;border:1px solid var(--line)}
+.ghost{background:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;align-self:flex-end}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <h1>Photo Layout Maker</h1>
+      <p>Put photos side by side, stacked or in a grid, then download one sharp image. Your photos stay on your device.</p>
+    </div>
+
+    <section class="card" aria-labelledby="h-photos">
+      <h2 id="h-photos">Photos</h2>
+      <label class="drop" for="file">
+        <strong id="addLabel">Add photos</strong>
+        <span class="hint">Add as many as you want. Select several at once, or drop them anywhere on this page.</span>
+        <input id="file" type="file" accept="image/*" multiple>
+      </label>
+      <div class="list-head"><span id="listCount"></span><button class="link-btn" id="clearAll" type="button">Remove all</button></div>
+      <ul class="photos" id="photoList"></ul>
+      <p class="hint">Drag the numbers or use the arrows to change the order.</p>
+    </section>
+
+    <section class="card" aria-labelledby="h-layout">
+      <h2 id="h-layout">Layout</h2>
+      <div class="seg cols-3" role="radiogroup" aria-labelledby="h-layout">
+        <input type="radio" name="perRow" id="pr0" value="0" checked><label for="pr0"><svg viewBox="0 0 30 22"><rect x="1" y="3" width="13" height="16" rx="1"/><rect x="16" y="3" width="13" height="16" rx="1"/></svg>Side by side</label>
+        <input type="radio" name="perRow" id="pr1" value="1"><label for="pr1"><svg viewBox="0 0 30 22"><rect x="6" y="1" width="18" height="9" rx="1"/><rect x="6" y="12" width="18" height="9" rx="1"/></svg>Stacked</label>
+        <input type="radio" name="perRow" id="prF" value="-1"><label for="prF"><svg viewBox="0 0 30 22"><rect x="1" y="1" width="18" height="20" rx="1"/><rect x="21" y="1" width="8" height="6" rx="1"/><rect x="21" y="8" width="8" height="6" rx="1"/><rect x="21" y="15" width="8" height="6" rx="1"/></svg>1 big + side</label>
+        <input type="radio" name="perRow" id="pr2" value="2"><label for="pr2"><svg viewBox="0 0 30 22"><rect x="5" y="1" width="9.5" height="9" rx="1"/><rect x="15.5" y="1" width="9.5" height="9" rx="1"/><rect x="5" y="12" width="9.5" height="9" rx="1"/><rect x="15.5" y="12" width="9.5" height="9" rx="1"/></svg>Grid of 2</label>
+        <input type="radio" name="perRow" id="pr3" value="3"><label for="pr3"><svg viewBox="0 0 30 22"><rect x="1" y="1" width="8.6" height="9" rx="1"/><rect x="10.7" y="1" width="8.6" height="9" rx="1"/><rect x="20.4" y="1" width="8.6" height="9" rx="1"/><rect x="1" y="12" width="8.6" height="9" rx="1"/><rect x="10.7" y="12" width="8.6" height="9" rx="1"/><rect x="20.4" y="12" width="8.6" height="9" rx="1"/></svg>Grid of 3</label>
+        <input type="radio" name="perRow" id="pr4" value="4"><label for="pr4"><svg viewBox="0 0 30 22"><rect x="1" y="1" width="6.2" height="9" rx="1"/><rect x="8.3" y="1" width="6.2" height="9" rx="1"/><rect x="15.6" y="1" width="6.2" height="9" rx="1"/><rect x="22.9" y="1" width="6.1" height="9" rx="1"/><rect x="1" y="12" width="6.2" height="9" rx="1"/><rect x="8.3" y="12" width="6.2" height="9" rx="1"/><rect x="15.6" y="12" width="6.2" height="9" rx="1"/><rect x="22.9" y="12" width="6.1" height="9" rx="1"/></svg>Grid of 4</label>
+      </div>
+      <h2 id="h-shape" style="margin-top:4px">Photo shape</h2>
+      <div class="seg cols-4" role="radiogroup" aria-labelledby="h-shape">
+        <input type="radio" name="shape" id="sh0" value="original" checked><label for="sh0">Full photo<small>no crop</small></label>
+        <input type="radio" name="shape" id="sh1" value="1"><label for="sh1">Square<small>1:1</small></label>
+        <input type="radio" name="shape" id="sh2" value="0.8"><label for="sh2">Portrait<small>4:5</small></label>
+        <input type="radio" name="shape" id="sh3" value="1.5"><label for="sh3">Landscape<small>3:2</small></label>
+      </div>
+      <p class="hint" id="cropHint" hidden>Drag a photo in the preview to choose what stays in the crop.</p>
+    </section>
+
+    <section class="card" aria-labelledby="h-space">
+      <h2 id="h-space">Spacing</h2>
+      <div class="row"><label for="gap">Space between photos</label><span class="val" id="gapVal">24 px</span></div>
+      <input type="range" id="gap" min="0" max="120" step="2" value="24">
+      <label class="check"><input type="checkbox" id="outer"> Add the same border around the outside</label>
+      <div class="row"><span style="font-size:14px">Color</span>
+        <div class="swatches" style="margin-left:auto">
+          <button class="swatch" data-color="#ffffff" style="background:#ffffff" aria-label="White" aria-pressed="true"></button>
+          <button class="swatch" data-color="#000000" style="background:#000000" aria-label="Black" aria-pressed="false"></button>
+          <button class="swatch" data-color="#f4efe6" style="background:#f4efe6" aria-label="Warm off-white" aria-pressed="false"></button>
+          <button class="swatch" data-color="#2f5d46" style="background:#2f5d46" aria-label="Forest green" aria-pressed="false"></button>
+          <input type="color" id="customColor" value="#ffffff" aria-label="Pick any color">
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-out">
+      <h2 id="h-out">Download size</h2>
+      <div class="seg cols-2" role="radiogroup" aria-labelledby="h-out">
+        <input type="radio" name="width" id="w1" value="1200"><label for="w1">Social<small>1200 px wide</small></label>
+        <input type="radio" name="width" id="w2" value="2400" checked><label for="w2">Web &amp; Givebutter<small>2400 px wide</small></label>
+        <input type="radio" name="width" id="w3" value="4000"><label for="w3">Print<small>4000 px wide</small></label>
+        <input type="radio" name="width" id="w4" value="max"><label for="w4">Largest<small>without enlarging</small></label>
+      </div>
+      <h2 id="h-fmt" style="margin-top:4px">File type</h2>
+      <div class="seg cols-2" role="radiogroup" aria-labelledby="h-fmt">
+        <input type="radio" name="format" id="f1" value="jpg" checked><label for="f1">JPG<small>small file, for web</small></label>
+        <input type="radio" name="format" id="f2" value="png"><label for="f2">PNG<small>lossless, large file</small></label>
+      </div>
+      <div id="qualityBox">
+        <div class="row"><label for="quality">JPG quality</label><span class="val" id="qVal">90</span></div>
+        <input type="range" id="quality" min="70" max="100" step="1" value="90">
+        <p class="hint" id="qHint">Looks the same as the original. Recommended.</p>
+      </div>
+      <label for="filename" style="font-size:14px">File name</label>
+      <input class="text" id="filename" type="text" value="photo-layout" spellcheck="false">
+    </section>
+  </aside>
+
+  <main class="main">
+    <div class="bar">
+      <div class="stats">
+        <div class="stat"><span>Size</span><b id="sDims">–</b></div>
+        <div class="stat"><span>File</span><b id="sFile">–</b></div>
+        <div class="stat"><span>Photos</span><b id="sCount">–</b></div>
+      </div>
+      <button class="primary" id="download" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1v9m0 0L4.5 6.5M8 10l3.5-3.5M2 12.5V14h12v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download image
+      </button>
+    </div>
+    <div class="notes" id="notes"></div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="stage" id="stage"><canvas id="preview" aria-label="Preview of the layout"></canvas></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">Drop photos to add them</div>
+<div class="fallback" id="fallback" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div class="box">
+    <strong id="fbTitle">Save your image</strong>
+    <p class="hint" style="margin:0">Right-click the image and choose Save Image, or press and hold it on a phone.</p>
+    <img id="fbImg" alt="Your finished layout">
+    <button class="ghost" id="fbClose" type="button">Close</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const MAX_PIXELS = 16000000; // stays inside every browser's canvas limit
+  const state = {
+    photos: [], perRow: 0, shape: 'original', gap: 24, outer: false, color: '#ffffff',
+    width: '2400', format: 'jpg', quality: 90, filename: 'photo-layout', nameEdited: false
+  };
+  let uid = 0;
+  let downloads = null;
+  let exportBlob = null, exportKey = '', exportTimer = null, exportPromise = null;
+
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('downloads').then(d => { downloads = d; }).catch(() => {});
+  }
+
+  /* ---------- example photos so the page opens in a working state ---------- */
+  function makeExample(w, h, c1, c2, label) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d');
+    const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, c1); g.addColorStop(1, c2);
+    x.fillStyle = g; x.fillRect(0, 0, w, h);
+    x.fillStyle = 'rgba(255,255,255,.18)';
+    x.beginPath(); x.arc(w * .7, h * .3, w * .28, 0, Math.PI * 2); x.fill();
+    x.fillStyle = 'rgba(255,255,255,.92)'; x.textAlign = 'center';
+    x.font = `600 ${Math.round(w * .07)}px "IBM Plex Sans", sans-serif`;
+    x.fillText(label, w / 2, h / 2);
+    x.font = `400 ${Math.round(w * .04)}px "IBM Plex Sans", sans-serif`;
+    x.fillText('Add your photos to replace', w / 2, h / 2 + w * .08);
+    return { id: ++uid, name: label, img: c, w, h, url: c.toDataURL('image/jpeg', .7), fx: .5, fy: .5, example: true };
+  }
+  state.photos = [
+    makeExample(1500, 2000, '#4f7a5e', '#1f3a2c', 'Example photo 1'),
+    makeExample(1500, 2240, '#c99b62', '#6b4a2b', 'Example photo 2')
+  ];
+
+  /* ---------- layout math ---------- */
+  const cellAspect = p => state.shape === 'original' ? p.w / p.h : parseFloat(state.shape);
+
+  function computeLayout(W) {
+    const g = state.gap, pad = state.outer ? g : 0;
+    const n = state.photos.length;
+    const innerW0 = W - 2 * pad;
+    if (state.perRow === -1 && n >= 2) {
+      const [first, ...rest] = state.photos;
+      const a0 = cellAspect(first);
+      const S = rest.reduce((s, p) => s + 1 / cellAspect(p), 0);
+      const G = g * (rest.length - 1);
+      const wR = (innerW0 - g - a0 * G) / (a0 * S + 1);
+      if (wR > 20) {
+        const wl = innerW0 - g - wR, H0 = wl / a0;
+        const cells = [{ p: first, x: pad, y: pad, w: wl, h: H0 }];
+        let y = pad;
+        rest.forEach(p => { const h = wR / cellAspect(p); cells.push({ p, x: pad + wl + g, y, w: wR, h }); y += h + g; });
+        return { W, H: H0 + 2 * pad, cells };
+      }
+    }
+    const per = state.perRow <= 0 ? n : state.perRow;
+    const rows = [];
+    for (let i = 0; i < n; i += per) rows.push(state.photos.slice(i, i + per));
+    const innerW = W - 2 * pad;
+    let y = pad, prevH = null;
+    const cells = [];
+    rows.forEach(row => {
+      const sumA = row.reduce((s, p) => s + cellAspect(p), 0);
+      let h = (innerW - g * (row.length - 1)) / sumA;
+      let rowW = innerW;
+      if (rows.length > 1 && row.length < per && prevH !== null && h > prevH) {
+        h = prevH; rowW = h * sumA + g * (row.length - 1);
+      }
+      let x = pad + (innerW - rowW) / 2;
+      row.forEach(p => { const w = h * cellAspect(p); cells.push({ p, x, y, w, h }); x += w + g; });
+      y += h + g; prevH = h;
+    });
+    return { W, H: Math.max(1, y - g + pad), cells };
+  }
+
+  function srcRect(p) {
+    if (state.shape === 'original') return [0, 0, p.w, p.h];
+    const a = cellAspect(p), pa = p.w / p.h;
+    let sw = p.w, sh = p.h;
+    if (pa > a) sw = p.h * a; else sh = p.w / a;
+    return [(p.w - sw) * p.fx, (p.h - sh) * p.fy, sw, sh];
+  }
+
+  function maxScale(L) {
+    let m = 0;
+    for (const c of L.cells) { const [, , sw] = srcRect(c.p); m = Math.max(m, c.w / sw); }
+    return m;
+  }
+
+  function largestWidth() {
+    let lo = 300, hi = 30000;
+    if (maxScale(computeLayout(lo)) > 1) return lo;
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2;
+      if (maxScale(computeLayout(mid)) <= 1) lo = mid; else hi = mid;
+    }
+    return Math.floor(lo);
+  }
+
+  function outputInfo() {
+    let W = state.width === 'max' ? largestWidth() : parseInt(state.width, 10);
+    let capped = false;
+    let L = computeLayout(W);
+    if (W * L.H > MAX_PIXELS) {
+      W = Math.floor(Math.sqrt(MAX_PIXELS / (L.H / W)));
+      while (W > 300 && W * computeLayout(W).H > MAX_PIXELS) W -= 10;
+      L = computeLayout(W); capped = true;
+    }
+    return { L, W, H: Math.round(L.H), capped, upscale: maxScale(L) };
+  }
+
+  /* ---------- drawing ---------- */
+  function drawHQ(ctx, src, sx, sy, sw, sh, dx, dy, dw, dh, best) {
+    if (dw < 1 || dh < 1) return;
+    if (!best || (sw <= dw * 2 && sh <= dh * 2)) { ctx.drawImage(src, sx, sy, sw, sh, dx, dy, dw, dh); return; }
+    // Shrink in halves so fine detail is averaged, not skipped.
+    let cur = src, cx = sx, cy = sy, cw = sw, ch = sh;
+    while (cw > dw * 2 && ch > dh * 2) {
+      const nw = Math.max(dw, Math.round(cw / 2)), nh = Math.max(dh, Math.round(ch / 2));
+      const t = document.createElement('canvas'); t.width = nw; t.height = nh;
+      const tc = t.getContext('2d'); tc.imageSmoothingEnabled = true; tc.imageSmoothingQuality = 'high';
+      tc.drawImage(cur, cx, cy, cw, ch, 0, 0, nw, nh);
+      cur = t; cx = 0; cy = 0; cw = nw; ch = nh;
+    }
+    ctx.drawImage(cur, cx, cy, cw, ch, dx, dy, dw, dh);
+  }
+
+  function render(canvas, L, s, best) {
+    const W = Math.max(1, Math.round(L.W * s)), H = Math.max(1, Math.round(L.H * s));
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = state.color; ctx.fillRect(0, 0, W, H);
+    for (const c of L.cells) {
+      const dx = Math.round(c.x * s), dy = Math.round(c.y * s);
+      const dw = Math.round((c.x + c.w) * s) - dx, dh = Math.round((c.y + c.h) * s) - dy;
+      const [sx, sy, sw, sh] = srcRect(c.p);
+      drawHQ(ctx, c.p.img, sx, sy, sw, sh, dx, dy, dw, dh, best);
+    }
+  }
+
+  /* ---------- preview ---------- */
+  const preview = $('#preview'), stage = $('#stage');
+  let previewScale = 1, lastInfo = null, rafPending = false;
+
+  function drawPreview() {
+    rafPending = false;
+    const info = outputInfo(); lastInfo = info;
+    const dpr = window.devicePixelRatio || 1;
+    const availW = Math.max(100, stage.clientWidth - 40), availH = Math.max(240, Math.min(window.innerHeight - 220, 1000));
+    const cssScale = Math.min(availW / info.W, availH / info.H, 1);
+    previewScale = Math.min(cssScale * dpr, 1);
+    render(preview, info.L, previewScale, false);
+    preview.style.width = (info.W * cssScale) + 'px';
+    preview.style.height = (info.H * cssScale) + 'px';
+    preview.classList.toggle('pannable', state.shape !== 'original');
+    updateStats(info);
+  }
+  function schedulePreview() { if (!rafPending) { rafPending = true; requestAnimationFrame(drawPreview); } }
+
+  function fmtBytes(b) { return b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB'; }
+
+  function updateStats(info) {
+    $('#sDims').textContent = `${info.W.toLocaleString()} × ${info.H.toLocaleString()} px`;
+    $('#sCount').textContent = state.photos.length;
+    const notes = [];
+    if (state.photos.some(p => p.example)) notes.push(['info', 'These are example photos. Add your own and they will replace them.']);
+    if (info.upscale > 1.02) notes.push(['warn', `At this size a photo gets enlarged by ${Math.round((info.upscale - 1) * 100)}%, which can look soft. Choose “Largest without enlarging” or a smaller size for the sharpest result.`]);
+    if (info.capped) notes.push(['warn', 'This layout is very large, so the width was reduced to keep it under 16 megapixels, the most every browser can save.']);
+    $('#notes').innerHTML = notes.map(([k, t]) => `<div class="note ${k === 'info' ? 'info' : ''}">${t}</div>`).join('');
+  }
+
+  /* ---------- export ---------- */
+  function keyNow() {
+    return JSON.stringify([state.photos.map(p => [p.id, p.fx.toFixed(4), p.fy.toFixed(4)]), state.perRow, state.shape, state.gap, state.outer, state.color, state.width, state.format, state.quality]);
+  }
+  function buildExport() {
+    const key = keyNow();
+    if (exportBlob && exportKey === key) return Promise.resolve(exportBlob);
+    if (exportPromise && exportPromise.key === key) return exportPromise;
+    const p = new Promise((resolve, reject) => {
+      const info = outputInfo();
+      const c = document.createElement('canvas');
+      render(c, info.L, 1, true);
+      const type = state.format === 'png' ? 'image/png' : 'image/jpeg';
+      c.toBlob(b => {
+        if (!b) { reject(new Error('render')); return; }
+        if (keyNow() === key) { exportBlob = b; exportKey = key; }
+        resolve(b);
+      }, type, state.format === 'png' ? undefined : state.quality / 100);
+    });
+    p.key = key; exportPromise = p;
+    return p;
+  }
+  function scheduleExport() {
+    $('#sFile').textContent = 'Working…';
+    clearTimeout(exportTimer);
+    exportTimer = setTimeout(() => {
+      buildExport().then(b => { if (exportKey === keyNow()) $('#sFile').textContent = fmtBytes(b.size); })
+        .catch(() => { $('#sFile').textContent = '–'; });
+    }, 450);
+  }
+
+  function update() { renderList(); schedulePreview(); scheduleExport(); }
+
+  /* ---------- photo list ---------- */
+  const list = $('#photoList');
+  function esc(s) { return s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+  function renderList() {
+    const n = state.photos.length;
+    list.innerHTML = state.photos.map((p, i) => `
+      <li class="photo" draggable="true" data-id="${p.id}">
+        <span class="num" title="Drag to reorder">${i + 1}</span>
+        <img src="${p.url}" alt="">
+        <span class="name">${esc(p.name)}${p.example ? '<span class="tag">example</span>' : ''}<span class="dims">${p.w} × ${p.h}</span></span>
+        <span class="tools">
+          <button class="icon-btn" data-act="up" ${i === 0 ? 'disabled' : ''} aria-label="Move ${esc(p.name)} earlier">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="M9 2 4 7l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn" data-act="down" ${i === n - 1 ? 'disabled' : ''} aria-label="Move ${esc(p.name)} later">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="m5 2 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="icon-btn" data-act="remove" aria-label="Remove ${esc(p.name)}">
+            <svg width="14" height="14" viewBox="0 0 14 14"><path d="m3 3 8 8M11 3l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        </span>
+      </li>`).join('');
+    $('#download').disabled = n === 0;
+    const real = state.photos.filter(p => !p.example).length;
+    $('#listCount').textContent = real ? `${real} photo${real > 1 ? 's' : ''}` : 'Example photos';
+    $('#addLabel').textContent = real ? 'Add more photos' : 'Add photos';
+    $('#clearAll').hidden = real === 0;
+  }
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn) return;
+    const id = +btn.closest('.photo').dataset.id;
+    const i = state.photos.findIndex(p => p.id === id); if (i < 0) return;
+    if (btn.dataset.act === 'up' && i > 0) [state.photos[i - 1], state.photos[i]] = [state.photos[i], state.photos[i - 1]];
+    if (btn.dataset.act === 'down' && i < state.photos.length - 1) [state.photos[i + 1], state.photos[i]] = [state.photos[i], state.photos[i + 1]];
+    if (btn.dataset.act === 'remove') {
+      const [p] = state.photos.splice(i, 1);
+      if (!p.example) URL.revokeObjectURL(p.url);
+    }
+    autoName(); update();
+  });
+  let dragId = null;
+  list.addEventListener('dragstart', e => {
+    const li = e.target.closest('.photo'); if (!li) return;
+    dragId = +li.dataset.id; li.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(dragId));
+  });
+  list.addEventListener('dragend', () => { dragId = null; list.querySelectorAll('.photo').forEach(l => l.classList.remove('dragging', 'over')); });
+  list.addEventListener('dragover', e => {
+    if (dragId === null) return;
+    e.preventDefault();
+    list.querySelectorAll('.photo').forEach(l => l.classList.remove('over'));
+    const li = e.target.closest('.photo'); if (li && +li.dataset.id !== dragId) li.classList.add('over');
+  });
+  list.addEventListener('drop', e => {
+    if (dragId === null) return;
+    e.preventDefault(); e.stopPropagation();
+    const li = e.target.closest('.photo'); if (!li) return;
+    const to = state.photos.findIndex(p => p.id === +li.dataset.id);
+    const from = state.photos.findIndex(p => p.id === dragId);
+    if (from < 0 || to < 0 || from === to) return;
+    const [moved] = state.photos.splice(from, 1); state.photos.splice(to, 0, moved);
+    dragId = null; autoName(); update();
+  });
+
+  /* ---------- adding files ---------- */
+  function setStatus(t) { $('#status').textContent = t; }
+  function autoName() {
+    if (state.nameEdited) return;
+    const real = state.photos.filter(p => !p.example);
+    const base = real.length ? real.slice(0, 3).map(p => p.name.replace(/\.[^.]+$/, '')).join(' + ') + (real.length > 3 ? ' + more' : '') : 'photo-layout';
+    state.filename = base.slice(0, 120);
+    $('#filename').value = state.filename;
+  }
+  async function addFiles(files) {
+    const arr = [...files].filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|avif|heic|heif|tiff?)$/i.test(f.name));
+    if (!arr.length) { setStatus('Those files are not photos. Add JPG, PNG or WebP images.'); return; }
+    setStatus(`Opening ${arr.length} photo${arr.length > 1 ? 's' : ''}…`);
+    const failed = [];
+    let added = 0;
+    for (const f of arr) {
+      const url = URL.createObjectURL(f);
+      const img = new Image(); img.decoding = 'async'; img.src = url;
+      try { await img.decode(); } catch (e) { failed.push(f.name); URL.revokeObjectURL(url); continue; }
+      if (!added && state.photos.some(p => p.example)) state.photos = state.photos.filter(p => !p.example);
+      state.photos.push({ id: ++uid, name: f.name, img, w: img.naturalWidth, h: img.naturalHeight, url, fx: .5, fy: .5 });
+      added++;
+    }
+    setStatus(failed.length ? `Couldn't open ${failed.join(', ')}. Save it as a JPG or PNG and add it again.` : `Added ${added} photo${added > 1 ? 's' : ''}.`);
+    autoName(); update();
+  }
+  $('#clearAll').addEventListener('click', () => {
+    state.photos.forEach(p => { if (!p.example) URL.revokeObjectURL(p.url); });
+    state.photos = []; autoName(); update(); setStatus('All photos removed.');
+  });
+  $('#file').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+
+  const overlay = $('#overlay'); let dragDepth = 0;
+  const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+  window.addEventListener('dragenter', e => { if (hasFiles(e)) { dragDepth++; overlay.classList.add('on'); } });
+  window.addEventListener('dragleave', e => { if (hasFiles(e)) { dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) overlay.classList.remove('on'); } });
+  window.addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
+  window.addEventListener('drop', e => {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); dragDepth = 0; overlay.classList.remove('on');
+    addFiles(e.dataTransfer.files);
+  });
+
+  /* ---------- settings ---------- */
+  document.querySelectorAll('input[name=perRow]').forEach(r => r.addEventListener('change', () => { state.perRow = +r.value; update(); }));
+  document.querySelectorAll('input[name=shape]').forEach(r => r.addEventListener('change', () => {
+    state.shape = r.value; $('#cropHint').hidden = state.shape === 'original'; update();
+  }));
+  document.querySelectorAll('input[name=width]').forEach(r => r.addEventListener('change', () => { state.width = r.value; update(); }));
+  document.querySelectorAll('input[name=format]').forEach(r => r.addEventListener('change', () => {
+    state.format = r.value; $('#qualityBox').hidden = state.format === 'png'; update();
+  }));
+  $('#gap').addEventListener('input', e => { state.gap = +e.target.value; $('#gapVal').textContent = state.gap + ' px'; update(); });
+  $('#outer').addEventListener('change', e => { state.outer = e.target.checked; update(); });
+  function setColor(c) {
+    state.color = c;
+    document.querySelectorAll('.swatch').forEach(s => s.setAttribute('aria-pressed', String(s.dataset.color.toLowerCase() === c.toLowerCase())));
+    $('#customColor').value = c; update();
+  }
+  document.querySelectorAll('.swatch').forEach(s => s.addEventListener('click', () => setColor(s.dataset.color)));
+  $('#customColor').addEventListener('input', e => setColor(e.target.value));
+  $('#quality').addEventListener('input', e => {
+    state.quality = +e.target.value; $('#qVal').textContent = state.quality;
+    $('#qHint').textContent = state.quality >= 95 ? 'Bigger file with no visible gain over 90.'
+      : state.quality >= 88 ? 'Looks the same as the original. Recommended.'
+      : state.quality >= 80 ? 'Smaller file. Still looks good on screens.'
+      : 'Smallest file. Fine detail may start to soften.';
+    update();
+  });
+  $('#filename').addEventListener('input', e => { state.filename = e.target.value; state.nameEdited = true; });
+
+  /* ---------- drag to reposition a crop ---------- */
+  let pan = null;
+  function hit(e) {
+    if (!lastInfo) return null;
+    const r = preview.getBoundingClientRect();
+    const k = lastInfo.W / r.width;
+    const x = (e.clientX - r.left) * k, y = (e.clientY - r.top) * k;
+    const c = lastInfo.L.cells.find(c => x >= c.x && x <= c.x + c.w && y >= c.y && y <= c.y + c.h);
+    return c ? { c, x, y, k } : null;
+  }
+  preview.addEventListener('pointerdown', e => {
+    if (state.shape === 'original') return;
+    const h = hit(e); if (!h) return;
+    const [, , sw, sh] = srcRect(h.c.p);
+    pan = { p: h.c.p, startX: e.clientX, startY: e.clientY, fx: h.c.p.fx, fy: h.c.p.fy, k: h.k, sw, sh, cell: h.c };
+    preview.setPointerCapture(e.pointerId); preview.classList.add('panning');
+  });
+  preview.addEventListener('pointermove', e => {
+    if (!pan) return;
+    const { p, cell, sw, sh, k } = pan;
+    const cellScale = cell.w / sw; // layout px per source px
+    const exX = (p.w - sw) * cellScale, exY = (p.h - sh) * cellScale;
+    const dx = (e.clientX - pan.startX) * k, dy = (e.clientY - pan.startY) * k;
+    if (exX > 0.5) p.fx = Math.min(1, Math.max(0, pan.fx - dx / exX));
+    if (exY > 0.5) p.fy = Math.min(1, Math.max(0, pan.fy - dy / exY));
+    schedulePreview();
+  });
+  const endPan = () => { if (pan) { pan = null; preview.classList.remove('panning'); scheduleExport(); } };
+  preview.addEventListener('pointerup', endPan);
+  preview.addEventListener('pointercancel', endPan);
+
+  /* ---------- download ---------- */
+  function cleanName() {
+    const base = (state.filename || 'photo-layout').replace(/[\\/:*?"<>|]+/g, '-').replace(/\.(jpe?g|png)$/i, '').trim() || 'photo-layout';
+    return base + (state.format === 'png' ? '.png' : '.jpg');
+  }
+  function showFallback(blob) {
+    const img = $('#fbImg');
+    if (img.dataset.url) URL.revokeObjectURL(img.dataset.url);
+    const url = URL.createObjectURL(blob); img.src = url; img.dataset.url = url;
+    $('#fallback').classList.add('on'); $('#fbClose').focus();
+  }
+  $('#fbClose').addEventListener('click', () => $('#fallback').classList.remove('on'));
+  $('#fallback').addEventListener('click', e => { if (e.target.id === 'fallback') $('#fallback').classList.remove('on'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#fallback').classList.remove('on'); });
+
+  $('#download').addEventListener('click', async () => {
+    const btn = $('#download'); btn.disabled = true;
+    setStatus('Preparing your full-size image…');
+    try {
+      const blob = await buildExport();
+      $('#sFile').textContent = fmtBytes(blob.size);
+      if (downloads) {
+        try {
+          await downloads.save({ filename: cleanName(), data: blob });
+          setStatus(`Saved ${cleanName()} (${fmtBytes(blob.size)}).`);
+        } catch (err) {
+          if (err && err.code === 'declined') setStatus('Download cancelled.');
+          else if (err && err.code === 'rate_limited') setStatus('A save prompt is already open. Finish that one, then try again.');
+          else { setStatus(''); showFallback(blob); }
+        }
+      } else if (!window.claude) {
+        // Opened as a file on your computer: download directly.
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = cleanName();
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+        setStatus(`Saved ${cleanName()} (${fmtBytes(blob.size)}) to your Downloads.`);
+      } else { setStatus(''); showFallback(blob); }
+    } catch (e) {
+      setStatus('Something went wrong making the image. Try a smaller download size.');
+    } finally { btn.disabled = state.photos.length === 0; }
+  });
+
+  window.addEventListener('resize', schedulePreview);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+    // redraw example labels with the loaded font
+    if (state.photos.every(p => p.example)) {
+      state.photos = [makeExample(1500, 2000, '#4f7a5e', '#1f3a2c', 'Example photo 1'), makeExample(1500, 2240, '#c99b62', '#6b4a2b', 'Example photo 2')];
+      update();
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>
