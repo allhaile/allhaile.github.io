@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1d5a39">
+<meta name="description" content="A phone-friendly game for learning the 42 AKC Rally Novice signs, scoring, and a heel training plan for small dogs.">
+<title>Little Lion Rally</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a rally ring on a phone. White course signs on stands sit on ring-mat green; the judge's scoresheet tallies in tabular numbers. */
+:root{
+  --bg:#e7eee6;
+  --surface:#fbfdfa;
+  --ink:#14211a;
+  --muted:#58695d;
+  --mat:#1d5a39;
+  --accent:#2445c4;
+  --line:#c8d5ca;
+  --good:#1d7a43;
+  --bad:#bf3328;
+  --warn:#a86a12;
+  --on-accent:#ffffff;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance;line-height:1.02}
+h1{font-size:2rem}
+h2{font-size:1.6rem}
+h3{font-size:1.2rem}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 110px;display:grid;gap:18px}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:6px}
+.brand small{display:block;font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.14em;color:var(--mat);text-transform:uppercase}
+.pill{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:999px;padding:4px 10px;font-size:.85rem;color:var(--muted);background:var(--surface)}
+.muted{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:none;border-radius:10px;padding:13px 16px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:1rem;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--mat);border-color:var(--mat);color:#fff}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.tile b{display:block;font-family:var(--display);font-size:1.7rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.tile span{font-size:.75rem;color:var(--muted);line-height:1.2;display:block;margin-top:4px}
+@media (max-width:420px){.tiles{grid-template-columns:repeat(2,1fr)}}
+
+/* The sign on its stand */
+.stand{display:grid;justify-items:center;gap:0}
+.sign{background:#fff;color:#111;border:3px solid #111;border-radius:6px;width:min(220px,62vw);aspect-ratio:8.5/11;display:grid;grid-template-rows:auto 1fr auto;padding:10px 10px 12px;position:relative;box-shadow:0 10px 0 -4px rgba(0,0,0,.12)}
+.sign .num{font-family:var(--display);font-weight:800;font-size:1.05rem;border:2.5px solid #111;border-radius:50%;width:2.1rem;height:2.1rem;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.sign .cls{position:absolute;top:12px;right:12px;font-family:var(--display);font-weight:800;font-size:.85rem;letter-spacing:.1em}
+.sign svg{width:100%;height:100%;max-height:150px;align-self:center}
+.sign .nm{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.25rem;line-height:1;text-align:center;text-wrap:balance}
+.sign.sm{width:118px;padding:6px 6px 8px;border-width:2.5px}
+.sign.sm .num{font-size:.8rem;width:1.6rem;height:1.6rem;border-width:2px}
+.sign.sm .cls{display:none}
+.sign.sm .nm{font-size:.85rem}
+.sign.sm svg{max-height:70px}
+.post{width:10px;height:26px;background:var(--mat);border-radius:0 0 3px 3px}
+.base{width:90px;height:8px;border-radius:6px;background:var(--mat)}
+.stand.sm .post{height:12px;width:7px}.stand.sm .base{width:56px;height:6px}
+.hide-name .nm{visibility:hidden}
+
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:1rem;line-height:1.35}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.opt:disabled{cursor:default}
+.fb{border-left:5px solid var(--good);padding:10px 12px;background:color-mix(in srgb,var(--good) 8%,var(--surface));border-radius:0 10px 10px 0;display:grid;gap:6px}
+.fb.bad{border-left-color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,var(--surface))}
+.fb.warn{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 9%,var(--surface))}
+.tip{font-size:.92rem;color:var(--muted)}
+.tip b{color:var(--ink)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mat);transition:width .3s}
+
+/* scoresheet */
+.sheet{font-variant-numeric:tabular-nums;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;background:var(--surface)}
+.sheet .hd{display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1.5px solid var(--ink);font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.sheet table{width:100%;border-collapse:collapse;font-size:.92rem}
+.sheet td{padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.sheet td:last-child{text-align:right;white-space:nowrap;font-weight:700}
+.sheet tr.ded td:last-child{color:var(--bad)}
+.scoreline{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.big{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:.9;font-variant-numeric:tabular-nums}
+.judge{font-family:var(--display);font-weight:600;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;color:var(--mat)}
+
+/* ribbon */
+.ribbon{position:relative;width:132px;height:178px;margin:4px auto 0}
+.ribbon .ros{position:absolute;inset:0 0 auto 0;width:132px;height:132px;border-radius:50%;background:repeating-conic-gradient(#1b7a40 0 6deg,#14632f 6deg 12deg);display:grid;place-items:center;z-index:2}
+.ribbon .ctr{width:78px;height:78px;border-radius:50%;background:#f5f1df;border:3px solid #c9a227;display:grid;place-items:center;text-align:center;font-family:var(--display);font-weight:800;color:#14632f;font-size:.82rem;line-height:1;text-transform:uppercase;letter-spacing:.04em}
+.ribbon .t1,.ribbon .t2{position:absolute;top:100px;width:30px;height:78px;background:#1b7a40;z-index:1;clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%)}
+.ribbon .t1{left:36px;transform:rotate(9deg)}.ribbon .t2{right:36px;transform:rotate(-9deg)}
+@media (prefers-reduced-motion:no-preference){
+  .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes pop{from{transform:scale(.6) rotate(-8deg);opacity:.3}to{transform:none;opacity:1}}
+}
+
+/* Bottom ring-gate nav */
+nav.gate{position:fixed;left:0;right:0;bottom:0;background:var(--mat);display:flex;justify-content:center;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+nav.gate .in{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:720px;width:100%}
+nav.gate a{color:#e8f3ea;text-decoration:none;text-align:center;font-family:var(--display);font-weight:600;font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 2px;border-radius:8px}
+nav.gate a[aria-current="page"]{background:#fff;color:#14211a}
+.list{display:grid;gap:10px}
+.lvl{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface);display:grid;gap:8px}
+.lvl.done{border-color:var(--good)}
+.lvl.locked{opacity:.55}
+.lvl .hdr{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.badge{font-size:.78rem;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--line);color:var(--ink);white-space:nowrap}
+.badge.good{background:var(--good);color:var(--on-accent)}
+.signgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.sbtn{background:none;border:none;padding:0;display:grid;justify-items:center;gap:6px}
+.sbtn .m{font-size:.75rem;color:var(--muted)}
+.sbtn .m.ok{color:var(--good);font-weight:700}
+.detail{display:grid;gap:12px;justify-items:center;text-align:left}
+.detail .txt{display:grid;gap:8px;width:100%}
+ul.check{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ul.check li{display:flex;gap:10px;align-items:flex-start}
+ul.check input{width:22px;height:22px;margin-top:1px;accent-color:var(--mat);flex:none}
+label.field{display:grid;gap:6px;font-size:.9rem;color:var(--muted)}
+label.field input{border:1.5px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;color:var(--ink);font-size:1rem}
+.rules{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:.95rem}
+.rules dt{font-family:var(--display);font-weight:800;font-size:1.15rem;font-variant-numeric:tabular-nums;color:var(--mat);text-align:right;line-height:1.25}
+.rules dd{margin:0}
+footer{font-size:.82rem;color:var(--muted);display:grid;gap:6px}
+footer a{color:var(--accent)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="gate" aria-label="Sections"><div class="in" id="nav"></div></nav>
+<script>
+(function(){
+"use strict";
+/* ---------- Data: AKC Rally Novice signs 1-42 ---------- */
+const UNITS={1:"Basics & Pace",2:"Turns",3:"Circles & Loops",4:"Fronts & Finishes",5:"Halts & Stays",6:"Cones & Side Step"};
+const SIGNS=[
+{n:1,u:1,name:"Start",ic:"start",d:"Marks the beginning of the course. Your dog does not have to be sitting.",tip:"Set up in heel position anyway. A calm start sets the tone."},
+{n:2,u:1,name:"Finish",ic:"finish",d:"Marks the end of the course. The clock stops when you pass it.",tip:"Keep the leash loose all the way past the sign, then celebrate."},
+{n:3,u:1,st:1,name:"Halt – Sit",ic:"oct",t:["SIT"],d:"Stop. Your dog sits in heel position. Then heel forward.",tip:"Stop square and look ahead. Twisting to look down at a small dog pulls the sit crooked."},
+{n:4,u:1,st:1,name:"Halt – Sit – Down",ic:"oct",t:["SIT","DOWN"],d:"Stop and your dog sits in heel position, then lies down in heel position. Then heel forward.",tip:"Teach a hand signal that sweeps toward the floor so you don't have to fold over a 15 lb dog."},
+{n:17,u:1,name:"Slow Pace",ic:"slow",d:"Slow down noticeably. A Normal Pace sign follows, unless it's the last sign.",tip:"Make it obvious. The judge wants to see a clear change."},
+{n:18,u:1,name:"Fast Pace",ic:"fast",d:"Speed up noticeably. A Normal Pace sign follows.",tip:"Small legs, big effort. Jog and cheer your dog on."},
+{n:19,u:1,name:"Normal Pace",ic:"normal",d:"Return to a brisk normal walk. Only used right after a slow or fast pace.",tip:"Brisk is the word. A dragging normal pace costs points."},
+{n:5,u:2,name:"Right Turn",ic:"right",d:"Make a 90° turn to the right while heeling.",tip:"Your dog is on the outside and travels farther. Talk them through it."},
+{n:6,u:2,name:"Left Turn",ic:"right",m:1,d:"Make a 90° turn to the left while heeling.",tip:"Your dog is on the inside. Shorten your steps so you don't clip paws."},
+{n:7,u:2,name:"About Turn – Right",ic:"about",d:"Make a 180° turn to the right while heeling.",tip:"Keep your left hand at your seam so your dog can follow it around."},
+{n:8,u:2,name:"About “U” Turn",ic:"about",m:1,d:"Make a 180° turn to the left while heeling, with your dog on the inside of the turn.",tip:"Slow way down into this one. Small dogs get stepped on here more than anywhere."},
+{n:29,u:2,name:"Left About Turn",ic:"leftabout",d:"You turn 180° to the left while your dog moves around you to the right and ends in heel position.",tip:"Teach the dog's part first as a standing trick, then add your turn."},
+{n:39,u:2,name:"Diagonal Right",ic:"diag",d:"Make an open-angle (about 45°) turn to the right while heeling.",tip:"The sign sits in your path. Turn at the sign, not after it."},
+{n:40,u:2,name:"Diagonal Left",ic:"diag",m:1,d:"Make an open-angle (about 45°) turn to the left while heeling.",tip:"Same as the right diagonal, with smaller steps since your dog is on the inside."},
+{n:9,u:3,name:"270° Right Turn",ic:"t270",d:"Make a tight 270° turn to the right while heeling.",tip:"Shortcut: a 270° right leaves you facing the same way a 90° left would."},
+{n:10,u:3,name:"270° Left Turn",ic:"t270",m:1,d:"Make a tight 270° turn to the left while heeling.",tip:"Shuffle small steps and keep your dog tight to your leg."},
+{n:11,u:3,name:"360° Right Turn",ic:"t360",d:"Make a tight full circle to the right while heeling, then keep going the same direction.",tip:"Pick a spot on the wall to finish facing so you come out straight."},
+{n:12,u:3,name:"360° Left Turn",ic:"t360",m:1,d:"Make a tight full circle to the left while heeling, then keep going the same direction.",tip:"Your dog is on the inside: go slow so they can stay close without getting bumped."},
+{n:37,u:3,name:"Loop Right",ic:"loop",d:"Loop to the right while heeling, crossing over your original path.",tip:"Think of drawing a lowercase cursive “e” on the floor."},
+{n:38,u:3,name:"Loop Left",ic:"loop",m:1,d:"Loop to the left while heeling, crossing over your original path.",tip:"Same shape as Loop Right, mirrored. Small steps on the inside."},
+{n:13,u:4,st:1,name:"Call Front – Finish Right – Forward",ic:"front",f:"R",d:"Stop and call your dog to sit in front of you. Without moving your feet, your dog finishes to the right, around behind you to heel. Then heel forward.",tip:"Stand tall with hands centered at your waist. Leaning over a small dog makes them sit too far away."},
+{n:14,u:4,st:1,name:"Call Front – Finish Left – Forward",ic:"front",f:"L",d:"Stop and call your dog to sit in front of you. Without moving your feet, your dog swings to your left into heel. Then heel forward.",tip:"Lure the swing with your left hand at first, then fade it to a small signal."},
+{n:15,u:4,st:1,name:"Call Front – Finish Right – Halt",ic:"front",f:"R",h:1,d:"Stop and call your dog to sit in front. Your dog finishes to the right into heel and sits. Then heel forward.",tip:"Same as #13 plus a sit at the end. Wait for the sit before you step off."},
+{n:16,u:4,st:1,name:"Call Front – Finish Left – Halt",ic:"front",f:"L",h:1,d:"Stop and call your dog to sit in front. Your dog swings left into heel and sits. Then heel forward.",tip:"Same as #14 plus a sit at the end."},
+{n:26,u:4,st:1,name:"Call Front – 1, 2, 3 Steps Backward",ic:"back123",d:"Call your dog to sit in front. Step back one step, then two, then three. Your dog follows and sits in front after each. Then finish and heel forward.",tip:"Small dogs love this one. Keep your steps short so they can keep up."},
+{n:35,u:4,st:1,name:"Call Front – Return to Heel",ic:"walk",t:"FRONT",d:"Call your dog to sit in front. Your dog stays while you walk around behind it back to heel position. Pause, then heel forward.",tip:"Practice the stay with a hand on your belly button so your dog isn't tempted to follow your hands."},
+{n:25,u:5,st:1,name:"Halt – 1, 2 & 3 Steps Forward",ic:"oct",t:["1·2·3"],d:"Halt and sit. Take one step and halt, two steps and halt, three steps and halt. Your dog heels with you and sits each time.",tip:"Count out loud in practice. It helps you keep the steps honest."},
+{n:27,u:5,st:1,name:"Stop and Down",ic:"oct",t:["DOWN"],d:"Stop and your dog lies down in heel position, with no sit first. It stays down until you move forward.",tip:"Don't mix this up with #4. Here the dog goes straight to the down."},
+{n:28,u:5,st:1,name:"Halt – Fast Forward from Sit",ic:"oct",t:["SIT","FAST"],d:"Halt and sit, then heel forward at a fast pace. A Normal Pace sign follows.",tip:"Burst off the line like it's a race. Then settle at the Normal sign."},
+{n:36,u:5,st:1,name:"Halt – Slow Forward from Sit",ic:"oct",t:["SIT","SLOW"],d:"Halt and sit, then heel forward at a slow pace. A Normal Pace sign follows, unless it's the last sign.",tip:"Slow from the very first step. No warm-up stride at normal speed."},
+{n:30,u:5,st:1,name:"Halt – Walk Around Dog",ic:"walk",t:"SIT",d:"Halt and sit. Your dog stays sitting while you walk all the way around it and back to heel. Pause, then heel forward.",tip:"Walk a wide circle at first so your dog doesn't swing around to follow you."},
+{n:31,u:5,st:1,name:"Halt – Down – Walk Around Dog",ic:"walk",t:"DOWN",d:"Halt and sit, then down. Your dog stays down while you walk around it back to heel. Pause, then heel forward.",tip:"A down-stay is easier than a sit-stay for most small dogs. Build it on a mat at home."},
+{n:33,u:5,st:1,name:"Halt – Right Turn – Forward",ic:"oct",t:["SIT","RIGHT"],d:"Halt and sit, then turn right together and heel forward.",tip:"Turn your feet and shoulders together so your dog reads the new direction."},
+{n:34,u:5,st:1,name:"Halt – Left Turn – Forward",ic:"oct",t:["SIT","LEFT"],d:"Halt and sit, then turn left together and heel forward.",tip:"Pivot slowly into your dog so you don't knock them."},
+{n:20,u:6,name:"Moving Side Step Right",ic:"side",d:"Take one step to the right, leading with your right foot, then keep heeling forward on the new line. Your dog moves with you.",tip:"Exaggerate the step at first. Your dog learns to read your hip."},
+{n:21,u:6,name:"Spiral Right – Dog Outside",ic:"spiral",d:"Three cones in a row. Turn right around each cone, so your dog is on the outside of the spiral.",tip:"Your dog is on the outside, so they have more ground to cover. Keep the energy up."},
+{n:22,u:6,name:"Spiral Left – Dog Inside",ic:"spiral",m:1,d:"Three cones in a row. Turn left around each cone, so your dog is on the inside of the spiral.",tip:"Your dog is on the inside. Slow down so the cones don't get knocked."},
+{n:23,u:6,name:"Straight Figure 8 Weave Twice",ic:"weave",d:"Four cones in a line. Enter with the first cone on your left and weave through the line twice.",tip:"Speed up when your dog is on the outside of a cone, slow down when they're on the inside."},
+{n:24,u:6,name:"Serpentine Weave Once",ic:"serp",d:"Four cones in a line. Enter with the first cone on your left and weave through once, without looping back.",tip:"Look where you're going next, not at the cone you're passing."},
+{n:32,u:6,name:"Figure 8 – No Distractions",ic:"fig8",d:"Two cones 6–8 feet apart. Heel a full figure 8 around them. You may enter from either side.",tip:"Your pace changes naturally on each loop. Keep the leash loose through both."},
+{n:41,u:6,name:"Offset Serpentine Right",ic:"offset",d:"Three cones with the middle cone set 3–4 feet to the right. Enter with the first cone on your right and snake through.",tip:"Walk the offset line during walkthrough so the angle doesn't surprise you."},
+{n:42,u:6,name:"Offset Serpentine Left",ic:"offset",m:1,d:"Three cones with the middle cone set 3–4 feet to the left. Enter with the first cone on your left and snake through.",tip:"Mirror of #41. Watch which side the first cone goes on."}
+];
+const BYN={};SIGNS.forEach(s=>BYN[s.n]=s);
+
+/* ---------- Sign icons (simplified, not the official art) ---------- */
+let uid=0;
+const P=(d,arrow=true,extra="")=>`<path d="${d}" fill="none" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" ${arrow?'marker-end="MK"':""} ${extra}/>`;
+const cone=(x,y)=>`<path d="M${x-7} ${y+8} L${x} ${y-9} L${x+7} ${y+8} Z" fill="#ef6a1c" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>`;
+const txt=(x,y,s,size=15)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,Arial" font-weight="800" font-size="${size}" fill="#111">${s}</text>`;
+function oct(lines){
+  const pts=[];for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4;pts.push((50+38*Math.cos(a)).toFixed(1)+","+(50+38*Math.sin(a)).toFixed(1));}
+  const sz=lines.length===1?24:15;const y0=50-(lines.length-1)*sz*0.55+sz*0.36;
+  return `<polygon points="${pts.join(" ")}" fill="none" stroke="#111" stroke-width="6" stroke-linejoin="round"/>`+txt(50,30,"HALT",11)+lines.map((l,i)=>txt(50,y0+i*sz*1.05+4,l,sz)).join("");
+}
+function iconInner(s){
+  switch(s.ic){
+    case "start":return P("M50 84 V20")+`<path d="M28 88 H72" stroke="#111" stroke-width="7" stroke-linecap="round"/>`;
+    case "finish":{let r="";for(let i=0;i<4;i++)for(let j=0;j<3;j++)if((i+j)%2===0)r+=`<rect x="${34+i*12}" y="${18+j*12}" width="12" height="12" fill="#111"/>`;return `<rect x="34" y="18" width="48" height="36" fill="none" stroke="#111" stroke-width="3"/>`+r+`<path d="M34 16 V90" stroke="#111" stroke-width="6" stroke-linecap="round"/>`;}
+    case "oct":return oct(s.t);
+    case "right":return P("M38 88 V50 Q38 34 54 34 H72");
+    case "about":return P("M32 88 V44 A18 18 0 0 1 68 44 V72");
+    case "leftabout":return P("M68 88 V44 A18 18 0 0 0 32 44 V72")+`<circle cx="82" cy="78" r="7" fill="#fff" stroke="#111" stroke-width="4"/>`+`<path d="M82 66 V30" stroke="#111" stroke-width="3.5" stroke-dasharray="4 5" fill="none"/>`;
+    case "diag":return P("M36 90 V64 L66 32");
+    case "t270":return P("M42 90 V45 A18 18 0 1 1 60 63 L24 63");
+    case "t360":return P("M38 92 V52 A16 16 0 0 1 70 52 A16 16 0 0 1 38 52 V18");
+    case "loop":return P("M48 92 V60 C48 30 82 30 78 52 C74 70 38 64 38 40 V14");
+    case "slow":return P("M38 30 L58 50 L38 70",false)+txt(50,92,"SLOW",17);
+    case "fast":return P("M18 30 L36 50 L18 70",false)+P("M42 30 L60 50 L42 70",false)+P("M66 30 L84 50 L66 70",false)+txt(50,92,"FAST",17);
+    case "normal":return P("M16 50 H80")+txt(50,82,"NORMAL",17);
+    case "front":{
+      const dog=`<circle cx="50" cy="28" r="8" fill="#fff" stroke="#111" stroke-width="4.5"/>`;
+      const h=`<circle cx="50" cy="60" r="11" fill="#111"/>`;
+      const path=s.f==="R"?P("M60 30 C84 36 84 88 50 86 C34 86 30 78 32 66"):P("M40 32 C22 38 20 56 32 62");
+      return dog+h+path+(s.h?txt(18,94,"SIT",14):"");}
+    case "back123":return `<circle cx="50" cy="22" r="10" fill="#111"/><circle cx="50" cy="50" r="7" fill="#fff" stroke="#111" stroke-width="4.5"/>`+txt(26,92,"1",18)+txt(50,92,"2",18)+txt(74,92,"3",18)+P("M50 66 V78",false)+`<path d="M26 72 V78 M74 72 V78" stroke="#111" stroke-width="5" stroke-linecap="round"/>`;
+    case "walk":return `<circle cx="50" cy="52" r="9" fill="#fff" stroke="#111" stroke-width="4.5"/>`+P("M28 58 A24 24 0 1 1 30 64",true,'stroke-dasharray="1 11"')+txt(50,96,s.t,15);
+    case "side":return P("M36 90 V62 L60 54 V16");
+    case "spiral":return cone(28,56)+cone(50,56)+cone(72,56)+P("M18 84 C0 54 26 26 50 26 C76 26 98 44 88 70");
+    case "weave":return cone(50,20)+cone(50,40)+cone(50,60)+cone(50,80)+P("M50 98 C30 92 30 70 50 70 C70 70 70 50 50 50 C30 50 30 30 50 30 C70 30 70 14 52 8",true,'stroke-width="5"');
+    case "serp":return cone(20,56)+cone(40,56)+cone(60,56)+cone(80,56)+P("M6 44 C16 44 22 72 30 72 C38 72 42 40 50 40 C58 40 62 72 70 72 C78 72 84 44 94 44",true,'stroke-width="5"');
+    case "fig8":return cone(28,52)+cone(72,52)+P("M50 52 C64 28 92 30 92 52 C92 74 64 76 50 52 C36 28 8 30 8 52 C8 74 36 76 48 54",false,'stroke-width="5"');
+    case "offset":return cone(44,82)+cone(64,50)+cone(44,18)+P("M30 98 C24 84 78 72 78 50 C78 30 30 32 32 6",true,'stroke-width="5"');
+  }
+  return "";
+}
+function icon(s){
+  const id="mk"+(++uid);
+  let inner=iconInner(s).replaceAll("MK",`url(#${id})`);
+  if(s.m)inner=`<g transform="translate(100,0) scale(-1,1)">${inner}</g>`;
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(s.name)} sign"><defs><marker id="${id}" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="3" markerHeight="3" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>${inner}</svg>`;
+}
+function signHTML(s,opts={}){
+  return `<div class="stand${opts.sm?" sm":""}"><div class="sign${opts.sm?" sm":""}${opts.hide?" hide-name":""}"><div class="num">${s.n}</div><div class="cls">NOVICE</div>${icon(s)}<div class="nm">${esc(s.name)}</div></div><div class="post"></div><div class="base"></div></div>`;
+}
+function esc(x){return String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ---------- Ring moments ---------- */
+const MOMENTS=[
+{q:"Halfway to the next sign, {dog} drops their nose to the mat to sniff.",o:[
+ ["Clap, pat your leg, and say “let's go!”",0,"Talking, clapping and patting your leg are all allowed in Novice."],
+ ["Give a quick tug on the leash",2,"Leash pops and a tight leash cost points. Keep it loose."],
+ ["Pull a treat from your pocket to lure them",-1,"Food in the ring is an automatic NQ. Treats wait outside."]]},
+{q:"You speed up and {dog}'s little legs start to fall behind.",o:[
+ ["Jog and cheer them on with your voice",0,"Encouragement is free in Novice. The judge wants to see a real speed change."],
+ ["Keep the leash tight and tow them along",2,"A tight leash costs 1–2 points each time it happens."],
+ ["Slow back down so they can keep up",2,"Not changing pace noticeably costs points. Build speed at home instead."]]},
+{q:"At a halt, {dog} sits crooked, angled away from your leg.",o:[
+ ["Accept it and move on",1,"A poor sit is usually about 1 point. Moving on is the cheapest choice."],
+ ["Use your retry on this sign",3,"A retry costs 3 points. Not worth it for a crooked sit."],
+ ["Reach down and push their rear straight",3,"Physically placing your dog is penalized, often more than the crooked sit."]]},
+{q:"A dog in the next ring barks, and {dog} barks back.",o:[
+ ["Calm voice, keep heeling, pat your leg to refocus",1,"One bark is a minor deduction. Moving on keeps it from becoming excessive barking, which is an NQ."],
+ ["Stop and say a sharp “NO! Quiet!”",3,"Loud or harsh commands are penalized."],
+ ["Stand still and wait for them to stop",3,"Standing around costs points for lack of briskness and invites more barking."]]},
+{q:"Oops. You heeled right past a sign without doing it.",o:[
+ ["Go back and do it, using your retry",3,"A retry costs 3 points. Skipping a sign entirely is an NQ."],
+ ["Keep going and hope the judge missed it",-1,"A sign not attempted is an NQ."],
+ ["Do the next sign twice to make up for it",-1,"There's no make-up. The skipped sign counts as not attempted: NQ."]]},
+{q:"On a turn into your dog, your foot nearly lands on {dog}'s paw.",o:[
+ ["Shorten your steps and turn slowly into them",0,"Small steps on inside turns keep a small dog safe and in position."],
+ ["Step over them awkwardly and keep going",2,"Handler errors and lack of teamwork cost points."],
+ ["Scoop them up and carry them through",10,"Carrying your dog isn't heeling. The sign is Incorrectly Performed: 10 points."]]},
+{q:"Excited, {dog} pulls ahead to the end of the leash.",o:[
+ ["Slow down, say “with me,” and pat your leg",1,"Out of position for a moment is usually about 1 point. Extra cues are allowed in Novice."],
+ ["Hold the leash tight to keep them back",2,"Tight leash: 1–2 points each time. Tight for the whole run is an NQ."],
+ ["Grab their collar to reposition them",3,"Touching your dog to put them in place is penalized."]]},
+{q:"Near the ring gate, {dog} starts sniffing in circles. You know that look.",o:[
+ ["Keep moving briskly and engage with your voice",0,"Eliminating in the ring is an NQ. Movement and focus prevent it. Always do a potty walk right before your run."],
+ ["Let them sniff, it calms them down",-1,"If they go, it's an automatic NQ."],
+ ["Pull them away with the leash",2,"Pulling on the leash costs points. Moving with energy works better."]]}
+];
+
+/* ---------- Judge quiz ---------- */
+const JQ=[
+["You use a retry on a sign. What does it cost?",["1 point","3 points","10 points"],1,"One retry per sign is allowed, at 3 points."],
+["You perform a sign wrong and don't retry it.",["3 points","10 points","NQ"],1,"An Incorrectly Performed sign is an automatic 10 points."],
+["Your leash goes tight for a moment.",["No deduction","1–2 points","NQ"],1,"Each tight-leash moment is a minor deduction."],
+["Your leash stays tight for most of the run.",["5 points","10 points","NQ"],2,"A consistently tight lead is a non-qualifying error."],
+["You offer your dog a treat in the ring.",["2 points","10 points","NQ"],2,"Food, toys or any training aid in the ring is an NQ."],
+["You clap and pat your leg to encourage your dog in Novice.",["No deduction","1 point","3 points"],0,"In Novice, talking, praise, clapping and leg pats are allowed."],
+["Your dog pees in the ring.",["3 points","10 points","NQ"],2,"Eliminating in the ring is an NQ."],
+["You skip a sign completely.",["3 points","10 points","NQ"],2,"A sign not attempted is an NQ."],
+["What score do you need to qualify?",["60","70","85"],1,"You start at 100. 70 or more is a qualifying score, one leg toward a title."],
+["How many signs are on a Novice course, not counting Start and Finish?",["5–10","10–15","15–20"],1,"Novice courses have 10 to 15 signs."],
+["How many stationary signs (ones with a halt) can a Novice course have?",["1–2","3–5","6–8"],1,"Novice courses use 3 to 5 stationary signs."],
+["How many qualifying scores earn the RN title?",["2","3","5"],1,"Three qualifying scores in Novice earn the Rally Novice (RN) title."],
+["How many retries can you use on one sign?",["None","One","As many as you need"],1,"One retry per sign, at 3 points."],
+["Where is heel position?",["Your right side","Your left side, in line with your hip","Right in front of you"],1,"Heel position is on your left, facing the same way, body in line with your left hip."],
+["Your dog knocks over a cone on the serpentine.",["No deduction","1–10 points, judge decides","Automatic NQ"],1,"Knocking a cone is scored by severity, from minor to substantial."],
+["What can your dog wear in the ring?",["A harness","A properly fitted flat collar","A head halter"],1,"Dogs wear a properly fitted collar. Prong and electronic collars are banned, and training collars and harnesses aren't allowed in the ring."],
+["Is the leash on or off in Novice?",["Off","On the whole course","On for half"],1,"All Novice signs are judged with the dog on leash."],
+["What's the most points one sign can cost you (short of an NQ)?",["5","10","20"],1,"The maximum deduction for a single sign is 10 points."]
+];
+
+/* ---------- Heel ladder ---------- */
+const HEEL=[
+{t:"Find the spot",d:"Stand still with your dog on your left. Reward at your left pant seam every time their shoulder lines up with your leg. A wooden spoon dipped in peanut butter or a squeeze tube saves your back.",r:"10 rewards per session",p:"Your dog moves to your left side on their own when you stand still."},
+{t:"One, two, three steps",d:"Take 1 step and reward at the seam. Then 2 steps. Then 3. Leash loose the whole time.",r:"5 rounds of 1-2-3",p:"3 steps with your dog at your leg, 4 out of 5 tries."},
+{t:"Ten steps straight",d:"Heel in a straight line. Reward every 3–5 steps, then stretch it to 10.",r:"6 straight lines",p:"10 steps, loose leash, 4 out of 5 tries."},
+{t:"Halt – sit",d:"Walk 5 steps and stop square. Lure the sit with the spoon held up and slightly back along your leg. Reward in position.",r:"8 halts",p:"Sits at your side within 2 seconds of you stopping, no lure."},
+{t:"Right turns",d:"Right turns first, since your dog is on the outside. Talk them through it. Then add About Turn Right.",r:"10 turns",p:"Stays at your leg through 3 right turns in a row."},
+{t:"Left turns",d:"Slow down and take tiny steps into your dog. Reward right after each turn so they learn to tuck in.",r:"10 turns",p:"3 left turns in a row with no bumps or stepped-on paws."},
+{t:"Pace changes",d:"Slow for 5 steps, fast for 5, then normal. Reward the moment your dog matches the new speed.",r:"6 rounds",p:"Matches speed changes without the leash going tight."},
+{t:"Ring rehearsal",d:"Put treats on a table off to the side. Heel through 3 signs with no food on you, then run to the treat table and party. Build to 6, then 10 signs.",r:"1 mini course",p:"10 signs with no food on you and a happy dog."}
+];
+const CHECK=["Potty walk right before your run","Flat collar that fits well. No prong, e-collar or harness, and nothing hanging off the collar","Fabric or leather leash with plenty of slack","Treats and toys stay outside the ring","Walk the course during walkthrough (without your dog)","Remember: one retry per sign, 3 points"];
+
+/* ---------- State ---------- */
+const KEY="littleLionRally.v1";
+const blank=()=>({dog:"",mast:{},legs:0,runs:0,best:0,heel:{},days:[],check:{}});
+let S=blank();
+function load(){try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw));}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+const dog=()=>S.dog.trim()||"your pup";
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+function streak(){
+  const set=new Set(S.days);let n=0;const d=new Date();
+  if(!set.has(today()))d.setDate(d.getDate()-1);
+  for(;;){const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");if(set.has(k)){n++;d.setDate(d.getDate()-1);}else break;}
+  return n;
+}
+const mastered=n=>(S.mast[n]||0)>=3;
+const masteredCount=()=>SIGNS.filter(s=>mastered(s.n)).length;
+const heelLevel=()=>{let i=0;while(i<HEEL.length&&S.heel[i]&&S.heel[i].p)i++;return i;};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=(a,k)=>shuffle(a).slice(0,k);
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+/* ---------- View plumbing ---------- */
+const app=document.getElementById("app");
+const VIEWS=["home","signs","drill","course","heel"];
+const LABELS={home:"Home",signs:"Signs",drill:"Drill",course:"Course",heel:"Heel"};
+let view="home";
+let drill=null, course=null, jq=null, openSign=null;
+function nav(){
+  document.getElementById("nav").innerHTML=VIEWS.map(v=>`<a href="#${v}" ${v===view?'aria-current="page"':""}>${LABELS[v]}</a>`).join("");
+}
+function go(v){if(location.hash!=="#"+v)location.hash=v;else render();}
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);view=VIEWS.includes(h)?h:"home";render();window.scrollTo(0,0);});
+function render(){
+  nav();
+  ({home:renderHome,signs:renderSigns,drill:renderDrill,course:renderCourse,heel:renderHeel})[view]();
+}
+const header=(sub,title)=>`<header class="top"><div class="brand"><small>${sub}</small><h1>${title}</h1></div><span class="pill">${esc(S.dog.trim()?S.dog.trim():"Rally Novice")}</span></header>`;
+
+/* ---------- Home ---------- */
+function dailySign(){const d=today().replaceAll("-","");let h=0;for(const c of d)h=(h*31+c.charCodeAt(0))%9973;const pool=SIGNS.filter(s=>s.n>2);return pool[h%pool.length];}
+function renderHome(){
+  const s=dailySign();const lvl=heelLevel();
+  app.innerHTML=header("AKC Rally · Novice","Little Lion Rally")+`
+  <section class="card" aria-labelledby="todayH">
+    <div class="row" style="justify-content:space-between"><h2 id="todayH">Sign of the day</h2><span class="badge${mastered(s.n)?" good":""}">${mastered(s.n)?"Mastered":"Learning"}</span></div>
+    <div class="detail">${signHTML(s)}<div class="txt"><p>${esc(s.d)}</p><p class="tip"><b>Small-dog tip:</b> ${esc(s.tip)}</p></div></div>
+  </section>
+  <div class="tiles" role="list">
+    <div class="tile" role="listitem"><b>${masteredCount()}<small style="font-size:.9rem">/42</small></b><span>signs mastered</span></div>
+    <div class="tile" role="listitem"><b>${S.legs}<small style="font-size:.9rem">/3</small></b><span>legs toward RN</span></div>
+    <div class="tile" role="listitem"><b>${Math.min(lvl+1,8)}<small style="font-size:.9rem">/8</small></b><span>heel level</span></div>
+    <div class="tile" role="listitem"><b>${streak()}</b><span>day training streak</span></div>
+  </div>
+  <section class="card">
+    <h2>Today's plan</h2>
+    <ul class="check" id="plan">
+      <li><span>1.</span><span><b>Heel Lab:</b> ${lvl<8?esc(HEEL[lvl].t)+" ("+esc(HEEL[lvl].r)+"), 3–5 minutes.":"All levels passed. Run a ring rehearsal."}</span></li>
+      <li><span>2.</span><span><b>Sign drill:</b> 10 questions, about 3 minutes.</span></li>
+      <li><span>3.</span><span><b>Mock course:</b> walk one on paper, then try the hardest sign with ${esc(dog())}.</span></li>
+    </ul>
+    <div class="grid2"><button class="btn" data-go="heel">Start Heel Lab</button><button class="btn ghost" data-go="drill">Sign drill</button></div>
+    <button class="btn ghost block" data-go="course">Walk a mock course</button>
+  </section>
+  <section class="card">
+    <h2>Novice in 30 seconds</h2>
+    <dl class="rules">
+      <dt>10–15</dt><dd>signs per course, plus Start and Finish</dd>
+      <dt>3–5</dt><dd>of them are stationary (involve a halt)</dd>
+      <dt>On</dt><dd>leash the whole time, and keep it loose</dd>
+      <dt>100</dt><dd>points to start; the judge deducts as you go</dd>
+      <dt>70</dt><dd>or more qualifies (one leg)</dd>
+      <dt>3</dt><dd>points for a retry; one retry per sign</dd>
+      <dt>10</dt><dd>points for a sign performed wrong</dd>
+      <dt>3 Qs</dt><dd>earn the Rally Novice (RN) title</dd>
+      <dt>OK</dt><dd>to talk, praise, clap and pat your leg</dd>
+      <dt>NQ</dt><dd>for food or toys in the ring, skipping a sign, a consistently tight leash, or a potty accident</dd>
+    </dl>
+  </section>
+  <section class="card">
+    <label class="field" for="dogName">Your dog's name (used in the game)
+      <input id="dogName" maxlength="24" autocomplete="off" placeholder="e.g. Leo" value="${esc(S.dog)}">
+    </label>
+  </section>
+  <footer>
+    <p>Built from the AKC Rally Regulations and the AKC Rally Signs and Descriptions (updated April 2026). Sign drawings here are simplified and won't look exactly like the real signs. Check the current rules before you enter a trial.</p>
+    <p><a href="https://www.akc.org/sports/rally/rally-resource-center/">AKC Rally Resource Center</a> · <a href="https://images.akc.org/pdf/Rally-Mini-Signs-Descriptions.pdf">AKC sign descriptions (PDF)</a></p>
+    <p>Progress saves in this browser only. Made by <a href="/">Haile Shavers</a>.</p>
+  </footer>`;
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+  const inp=document.getElementById("dogName");
+  inp.oninput=()=>{S.dog=inp.value;save();};
+  inp.onchange=()=>render();
+}
+
+/* ---------- Sign book ---------- */
+let bookUnit=0;
+function renderSigns(){
+  if(openSign){const s=BYN[openSign];
+    app.innerHTML=header(UNITS[s.u],"Sign "+s.n)+`<section class="card"><div class="detail">${signHTML(s)}<div class="txt"><h3>${esc(s.name)}</h3>${s.st?'<span class="badge">Stationary sign</span>':""}<p>${esc(s.d)}</p><p class="tip"><b>Small-dog tip:</b> ${esc(s.tip)}</p><p class="tip">Drill score: ${S.mast[s.n]||0}/3 correct in a row${mastered(s.n)?" · mastered":""}</p></div></div>
+    <div class="grid2"><button class="btn ghost" id="back">All signs</button><button class="btn" id="practice">Drill this unit</button></div></section>`;
+    document.getElementById("back").onclick=()=>{openSign=null;render();};
+    document.getElementById("practice").onclick=()=>{openSign=null;startDrill(s.u);go("drill");};
+    return;
+  }
+  const list=SIGNS.filter(s=>!bookUnit||s.u===bookUnit);
+  app.innerHTML=header("Sign book","42 Novice signs")+`
+  <div class="row" role="group" aria-label="Filter by unit">${[0,1,2,3,4,5,6].map(u=>`<button class="chip" data-u="${u}" aria-pressed="${u===bookUnit}">${u?UNITS[u]:"All"}</button>`).join("")}</div>
+  <p class="muted">Tap a sign to learn it. ${masteredCount()} of 42 mastered (3 right in a row in the drill).</p>
+  <div class="signgrid">${list.map(s=>`<button class="sbtn" data-n="${s.n}" aria-label="Sign ${s.n}, ${esc(s.name)}">${signHTML(s,{sm:1})}<span class="m${mastered(s.n)?" ok":""}">${mastered(s.n)?"Mastered":(S.mast[s.n]||0)+"/3"}</span></button>`).join("")}</div>`;
+  app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>{bookUnit=+b.dataset.u;render();});
+  app.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{openSign=+b.dataset.n;render();window.scrollTo(0,0);});
+}
+
+/* ---------- Drill ---------- */
+let drillUnit=0;
+function startDrill(u){
+  drillUnit=u;
+  const pool=SIGNS.filter(s=>!u||s.u===u);
+  // weight unmastered signs first
+  const order=shuffle(pool).sort((a,b)=>(S.mast[a.n]||0)-(S.mast[b.n]||0));
+  const qs=[];for(let i=0;i<10;i++)qs.push(order[i%order.length]);
+  drill={qs:shuffle(qs).map(s=>makeQ(s)),i:0,right:0,answered:false,pick:null};jq=null;
+}
+function makeQ(s){
+  const type=Math.random()<.6?"a":"b";
+  const same=SIGNS.filter(x=>x.n!==s.n&&x.u===s.u&&x.n>2);
+  const other=SIGNS.filter(x=>x.n!==s.n&&x.u!==s.u&&x.n>2);
+  const dist=pick(same,2).concat(pick(other,2)).slice(0,2);
+  if(dist.length<2)dist.push(...pick(other,2-dist.length));
+  return {s,type,opts:shuffle([s,...dist])};
+}
+function renderDrill(){
+  if(jq)return renderJudge();
+  if(!drill||drill.done){
+    const fin=drill&&drill.done;
+    app.innerHTML=header("Practice","Drills")+(fin?`<section class="card"><div class="scoreline"><h2>Drill done</h2><span class="big">${drill.right}/10</span></div><p>${drill.right>=9?"Ring ready on these.":drill.right>=7?"Solid. Run it again to lock in the misses.":"Keep going. Misses come back first next round."}</p></section>`:"")+`
+    <section class="card"><h2>Sign drill</h2><p class="muted">10 questions. See a sign, pick what to do, or read the move and pick the sign. Signs you miss come up first next time.</p>
+    <div class="row" role="group" aria-label="Pick a unit">${[0,1,2,3,4,5,6].map(u=>`<button class="chip" data-u="${u}" aria-pressed="${u===drillUnit}">${u?UNITS[u]:"All signs"}</button>`).join("")}</div>
+    <button class="btn block" id="go">Start sign drill</button></section>
+    <section class="card"><h2>Judge's eye</h2><p class="muted">10 questions on scoring. Know what each mistake costs before it happens in the ring.</p><button class="btn ghost block" id="jgo">Start judge quiz</button></section>`;
+    app.querySelectorAll("[data-u]").forEach(b=>b.onclick=()=>{drillUnit=+b.dataset.u;renderDrill();});
+    document.getElementById("go").onclick=()=>{startDrill(drillUnit);renderDrill();window.scrollTo(0,0);};
+    document.getElementById("jgo").onclick=()=>{jq={qs:pick(JQ,10),i:0,right:0,answered:false};renderJudge();window.scrollTo(0,0);};
+    return;
+  }
+  const q=drill.qs[drill.i];const s=q.s;
+  const prompt=q.type==="a"?`<div class="detail">${signHTML(s)}</div><h3>What do you and ${esc(dog())} do?</h3>`:`<div class="card" style="background:var(--bg)"><p style="font-size:1.08rem">“${esc(s.d)}”</p></div><h3>Which sign is this?</h3>`;
+  const optText=o=>q.type==="a"?esc(o.d):`<b>#${o.n}</b> ${esc(o.name)}`;
+  app.innerHTML=header("Sign drill · "+(drillUnit?UNITS[drillUnit]:"All signs"),`Question ${drill.i+1}<small class="muted" style="font-size:1rem"> /10</small>`)+`
+  <div class="bar" aria-hidden="true"><i style="width:${drill.i*10}%"></i></div>
+  <section class="card">${prompt}<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}">${optText(o)}</button>`).join("")}</div><div id="fb"></div></section>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(drill.answered)return;drill.answered=true;
+    const o=q.opts[+b.dataset.k];const ok=o.n===s.n;
+    if(ok){drill.right++;S.mast[s.n]=(S.mast[s.n]||0)+1;}else S.mast[s.n]=0;
+    markDay();save();
+    app.querySelectorAll(".opt").forEach((x,k)=>{x.disabled=true;if(q.opts[k].n===s.n)x.classList.add("right");else if(x===b)x.classList.add("wrong");});
+    document.getElementById("fb").innerHTML=`<div class="fb${ok?"":" bad"}"><b>${ok?"Right.":"Not quite."} #${s.n} ${esc(s.name)}</b><span>${esc(s.d)}</span><span class="tip"><b>Small-dog tip:</b> ${esc(s.tip)}</span></div><button class="btn block" id="next" style="margin-top:12px">${drill.i<9?"Next":"See results"}</button>`;
+    document.getElementById("next").onclick=()=>{drill.i++;drill.answered=false;if(drill.i>=10)drill.done=true;renderDrill();window.scrollTo(0,0);};
+    document.getElementById("next").focus({preventScroll:true});
+  });
+}
+function renderJudge(){
+  if(jq.i>=10){
+    app.innerHTML=header("Judge's eye","Results")+`<section class="card"><div class="scoreline"><h2>Scoring quiz</h2><span class="big">${jq.right}/10</span></div><p>${jq.right>=9?"You score like a judge.":"Run it again. Knowing the costs keeps you calm in the ring."}</p><div class="grid2"><button class="btn" id="again">Again</button><button class="btn ghost" id="done">Back to drills</button></div></section>`;
+    document.getElementById("again").onclick=()=>{jq={qs:pick(JQ,10),i:0,right:0,answered:false};renderJudge();};
+    document.getElementById("done").onclick=()=>{jq=null;drill=null;renderDrill();};
+    return;
+  }
+  const [q,opts,ans,why]=jq.qs[jq.i];
+  app.innerHTML=header("Judge's eye",`Question ${jq.i+1}<small class="muted" style="font-size:1rem"> /10</small>`)+`<div class="bar" aria-hidden="true"><i style="width:${jq.i*10}%"></i></div>
+  <section class="card"><p class="judge">Judge's clipboard</p><h3 style="text-transform:none;font-size:1.35rem">${esc(q)}</h3><div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o)}</button>`).join("")}</div><div id="fb"></div></section>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(jq.answered)return;jq.answered=true;const k=+b.dataset.k;const ok=k===ans;if(ok)jq.right++;
+    app.querySelectorAll(".opt").forEach((x,i)=>{x.disabled=true;if(i===ans)x.classList.add("right");else if(x===b)x.classList.add("wrong");});
+    document.getElementById("fb").innerHTML=`<div class="fb${ok?"":" bad"}"><b>${ok?"Right.":"Not quite."}</b><span>${esc(why)}</span></div><button class="btn block" id="next" style="margin-top:12px">${jq.i<9?"Next":"See results"}</button>`;
+    document.getElementById("next").onclick=()=>{jq.i++;jq.answered=false;renderJudge();window.scrollTo(0,0);};
+  });
+}
+
+/* ---------- Mock course ---------- */
+function buildCourse(){
+  const N=rint(10,15), nStat=rint(3,5);
+  const needsNormal=n=>n===17||n===18||n===28||n===36;
+  const stat=pick(SIGNS.filter(s=>s.st).map(s=>s.n),nStat);
+  const mov=shuffle(SIGNS.filter(s=>!s.st&&![1,2,19].includes(s.n)).map(s=>s.n));
+  const items=[];let total=0;
+  stat.forEach(n=>{const u=needsNormal(n)?[n,19]:[n];items.push(u);total+=u.length;});
+  for(const n of mov){if(total>=N)break;const u=needsNormal(n)?[n,19]:[n];if(total+u.length>N)continue;items.push(u);total+=u.length;}
+  return shuffle(items).flat();
+}
+function startCourse(){
+  const seq=buildCourse();
+  const slots=shuffle([...Array(seq.length).keys()].slice(1)).slice(0,3).sort((a,b)=>a-b);
+  const moms=pick(MOMENTS.map((_,i)=>i),3);
+  const momentAt={};slots.forEach((s,i)=>{if(Math.random()<.8)momentAt[s]=moms[i];});
+  course={seq,i:-1,phase:"intro",tries:0,ded:seq.map(()=>[]),momentAt,nq:null,opts:null};
+}
+const stationTotal=i=>Math.min(10,course.ded[i].reduce((a,d)=>a+d.p,0));
+const scoreNow=()=>100-course.seq.reduce((a,_,i)=>a+stationTotal(i),0);
+function renderCourse(){
+  if(!course||course.phase==="menu"){
+    app.innerHTML=header("Mock trial","Walk a course")+`<section class="card"><p>You'll get a random Novice course: 10–15 signs, 3–5 of them stationary, built the way AKC courses are. At each sign, pick what you and ${esc(dog())} do. Things happen between signs too, like a sniff or a crooked sit. You start with 100 points.</p>
+    <dl class="rules"><dt>−3</dt><dd>first wrong answer on a sign (you use your retry)</dd><dt>−10</dt><dd>wrong again: Incorrectly Performed</dd><dt>NQ</dt><dd>food in the ring, skipping a sign, and other run-enders</dd></dl>
+    <button class="btn block" id="go">Enter the ring</button></section>
+    <section class="card"><h2>Before the ring</h2><ul class="check">${CHECK.map((c,i)=>`<li><input type="checkbox" id="ck${i}" ${S.check[i]?"checked":""}><label for="ck${i}">${esc(c)}</label></li>`).join("")}</ul></section>
+    <p class="muted">${S.runs} runs so far · best score ${S.runs?S.best:"–"} · ${S.legs} of 3 legs</p>`;
+    document.getElementById("go").onclick=()=>{startCourse();renderCourse();window.scrollTo(0,0);};
+    CHECK.forEach((_,i)=>{const c=document.getElementById("ck"+i);c.onchange=()=>{S.check[i]=c.checked;save();};});
+    return;
+  }
+  const c=course;const n=c.seq.length;
+  const top=(label)=>header(`Mock trial · ${n} signs`,label)+`<div class="row" style="justify-content:space-between"><span class="pill">Sign ${Math.max(0,c.i+1)} of ${n}</span><span class="pill" style="font-variant-numeric:tabular-nums">Score <b style="color:var(--ink)">${scoreNow()}</b></span></div><div class="bar" aria-hidden="true"><i style="width:${Math.max(0,c.i)/n*100}%"></i></div>`;
+  if(c.phase==="intro"){
+    app.innerHTML=top("Start")+`<section class="card"><div class="detail">${signHTML(BYN[1])}</div><p class="judge">Judge: “Are you ready?”</p><p>${esc(dog()[0].toUpperCase()+dog().slice(1))} is on your left, leash loose. Nod, and the judge says “Forward.” The clock starts.</p><button class="btn block" id="go">Forward</button></section>`;
+    document.getElementById("go").onclick=()=>{c.i=0;c.phase="sign";c.tries=0;c.opts=null;renderCourse();};
+    return;
+  }
+  if(c.phase==="sign"){
+    const s=BYN[c.seq[c.i]];
+    if(!c.opts){const q=makeQ(s);q.type="a";c.opts=q.opts;}
+    app.innerHTML=top(c.tries?"Retry":"Next sign")+`<section class="card"><div class="detail">${signHTML(s)}</div><h3>${c.tries?"Retry costs 3 points. Try again:":"What do you do?"}</h3><div class="opts">${c.opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.d)}</button>`).join("")}</div><div id="fb"></div></section>`;
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const o=c.opts[+b.dataset.k];const ok=o.n===s.n;
+      app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+      let msg,cls;
+      if(ok){b.classList.add("right");msg=`<b>Nice. #${s.n} done.</b><span class="tip"><b>Small-dog tip:</b> ${esc(s.tip)}</span>`;cls="";S.mast[s.n]=(S.mast[s.n]||0)+1;}
+      else if(c.tries===0){b.classList.add("wrong");c.ded[c.i].push({p:3,why:"Retry"});c.tries=1;msg=`<b>Judge: “Retry.” −3</b><span>That's not this sign. You get one retry.</span>`;cls=" warn";S.mast[s.n]=0;}
+      else{b.classList.add("wrong");app.querySelectorAll(".opt").forEach((x,k)=>{if(c.opts[k].n===s.n)x.classList.add("right");});c.ded[c.i].push({p:7,why:"Incorrectly performed"});msg=`<b>Incorrectly performed. 10 points total on this sign.</b><span>${esc(s.d)}</span>`;cls=" bad";}
+      save();
+      const fb=document.getElementById("fb");
+      if(!ok&&c.tries===1&&c.ded[c.i].length===1){
+        fb.innerHTML=`<div class="fb${cls}">${msg}</div><button class="btn block" id="next" style="margin-top:12px">Retry the sign</button>`;
+        document.getElementById("next").onclick=()=>{c.opts=shuffle(c.opts);renderCourse();};
+      }else{
+        fb.innerHTML=`<div class="fb${cls}">${msg}</div><button class="btn block" id="next" style="margin-top:12px">Heel on</button>`;
+        document.getElementById("next").onclick=advance;
+      }
+      document.getElementById("next").focus({preventScroll:true});
+    });
+    return;
+  }
+  if(c.phase==="moment"){
+    const m=MOMENTS[c.momentAt[c.i]];const opts=c.mopts||(c.mopts=shuffle(m.o));
+    app.innerHTML=top("In the ring")+`<section class="card"><p class="judge">Between signs</p><h3 style="text-transform:none;font-size:1.35rem">${esc(m.q.replace("{dog}",dog()))}</h3><div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o[0])}</button>`).join("")}</div><div id="fb"></div></section>`;
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const o=opts[+b.dataset.k];app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+      const best=Math.min(...opts.map(x=>x[1]<0?99:x[1]));
+      b.classList.add(o[1]===best?"right":"wrong");
+      const fb=document.getElementById("fb");
+      if(o[1]<0){c.nq=o[2];fb.innerHTML=`<div class="fb bad"><b>Judge: “Thank you.” NQ</b><span>${esc(o[2])}</span></div><button class="btn block" id="next" style="margin-top:12px">See scoresheet</button>`;document.getElementById("next").onclick=()=>finish();}
+      else{if(o[1]>0)c.ded[c.i].push({p:o[1],why:o[0]});fb.innerHTML=`<div class="fb${o[1]===0?"":o[1]>=3?" bad":" warn"}"><b>${o[1]===0?"No deduction.":"−"+o[1]+(o[1]===1?" point":" points")}</b><span>${esc(o[2])}</span></div><button class="btn block" id="next" style="margin-top:12px">Heel on</button>`;document.getElementById("next").onclick=()=>{c.mopts=null;c.momentDone=c.i;advance();};}
+      document.getElementById("next").focus({preventScroll:true});
+    });
+    return;
+  }
+  if(c.phase==="result")return renderResult();
+}
+function advance(){
+  const c=course;
+  if(c.momentAt[c.i]!==undefined&&c.momentDone!==c.i&&c.phase==="sign"){c.phase="moment";renderCourse();window.scrollTo(0,0);return;}
+  c.i++;c.tries=0;c.opts=null;c.phase="sign";
+  if(c.i>=c.seq.length)return finish();
+  renderCourse();window.scrollTo(0,0);
+}
+function finish(){
+  const c=course;c.phase="result";c.final=c.nq?0:scoreNow();c.q=!c.nq&&c.final>=70;
+  S.runs++;if(!c.nq)S.best=Math.max(S.best,c.final);if(c.q)S.legs=Math.min(3,S.legs+1);
+  markDay();save();renderCourse();window.scrollTo(0,0);
+}
+function renderResult(){
+  const c=course;
+  const rows=c.seq.map((n,i)=>{const t=stationTotal(i);const s=BYN[n];const why=c.ded[i].map(d=>d.why).join("; ");const gone=c.nq&&i>c.i;return `<tr class="${t?"ded":""}"><td><b>${i+1}.</b> #${s.n} ${esc(s.name)}${why?`<br><span class="tip">${esc(why)}</span>`:""}</td><td>${gone?"–":t?"−"+t:"0"}</td></tr>`;}).join("");
+  const ribbon=c.q?`<div class="ribbon pop" aria-label="Qualifying ribbon"><div class="t1"></div><div class="t2"></div><div class="ros"><div class="ctr">Quali-<br>fying<br>${c.final}</div></div></div>`:"";
+  const msg=c.nq?esc(c.nq):c.q?(S.legs>=3?`That's 3 legs. In the game, ${esc(dog())} is an RN. Time to find a real trial.`:`Qualifying score. ${S.legs} of 3 legs toward RN.`):`${c.final} is under 70. No leg this time. Check the scoresheet for where points went.`;
+  app.innerHTML=header("Mock trial","Scoresheet")+`<section class="card">${ribbon}<div class="scoreline"><h2>${c.nq?"Non-qualifying":c.q?"You qualified":"No Q"}</h2><span class="big" style="color:${c.q?"var(--good)":"var(--bad)"}">${c.nq?"NQ":c.final}</span></div><p>${msg}</p></section>
+  <div class="sheet"><div class="hd"><span>Rally Novice</span><span>${c.seq.length} signs</span></div><table><tbody>${rows}<tr><td><b>Total</b> (out of 100)</td><td>${c.nq?"NQ":c.final}</td></tr></tbody></table></div>
+  <div class="grid2"><button class="btn" id="again">New course</button><button class="btn ghost" id="judge">Judge quiz</button></div>`;
+  document.getElementById("again").onclick=()=>{startCourse();renderCourse();window.scrollTo(0,0);};
+  document.getElementById("judge").onclick=()=>{jq={qs:pick(JQ,10),i:0,right:0,answered:false};course={phase:"menu"};go("drill");};
+}
+
+/* ---------- Heel Lab ---------- */
+function markDay(){const t=today();if(!S.days.includes(t)){S.days.push(t);if(S.days.length>400)S.days=S.days.slice(-400);}}
+function renderHeel(){
+  const cur=heelLevel();
+  app.innerHTML=header("Heel Lab","Build the heel")+`<section class="card"><p>Eight short levels for a small dog still learning to heel. Do one level for 3–5 minutes, once or twice a day. Stop while ${esc(dog())} still wants more. Log each session, and mark a level passed when you hit the goal.</p><p class="tip"><b>Practice treats are great.</b> They just can't come into the ring, so Level 8 teaches ${esc(dog())} to work with the treats off your body.</p></section>
+  <div class="list">${HEEL.map((h,i)=>{const st=S.heel[i]||{s:0,p:false};const locked=i>cur;const done=st.p;
+    return `<section class="lvl${done?" done":""}${locked?" locked":""}" aria-label="Level ${i+1}"><div class="hdr"><h3>${i+1}. ${esc(h.t)}</h3><span class="badge${done?" good":""}">${done?"Passed":locked?"Locked":"Now"}</span></div>
+    ${locked?`<p class="tip">Unlocks after level ${i}.</p>`:`<p>${esc(h.d)}</p><p class="tip"><b>Session:</b> ${esc(h.r)}</p><p class="tip"><b>Pass when:</b> ${esc(h.p)}</p>
+    <div class="row"><button class="btn" data-log="${i}">Log a session</button><button class="btn ghost" data-pass="${i}">${done?"Undo pass":"Mark passed"}</button><span class="muted" style="font-variant-numeric:tabular-nums">${st.s} session${st.s===1?"":"s"}</span></div>`}</section>`;}).join("")}</div>
+  <p class="muted">${streak()} day streak. Drills and mock courses count too.</p>`;
+  app.querySelectorAll("[data-log]").forEach(b=>b.onclick=()=>{const i=+b.dataset.log;S.heel[i]=S.heel[i]||{s:0,p:false};S.heel[i].s++;markDay();save();renderHeel();});
+  app.querySelectorAll("[data-pass]").forEach(b=>b.onclick=()=>{const i=+b.dataset.pass;S.heel[i]=S.heel[i]||{s:0,p:false};S.heel[i].p=!S.heel[i].p;if(!S.heel[i].p){for(let j=i+1;j<HEEL.length;j++)if(S.heel[j])S.heel[j].p=false;}markDay();save();renderHeel();});
+}
+
+/* ---------- Boot ---------- */
+function start(data){
+  load();
+  if(data&&data.course)course=data.course;
+  const h=location.hash.slice(1);view=VIEWS.includes(h)?h:"home";
+  render();
+}
+start({});
+})();
+</script>
+</body>
+</html>
