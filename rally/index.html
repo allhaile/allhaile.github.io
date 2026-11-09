@@ -60,16 +60,16 @@ header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:1
 
 /* The sign on its stand */
 .stand{display:grid;justify-items:center;gap:0}
-.sign{background:#fff;color:#111;border:3px solid #111;border-radius:6px;width:min(220px,62vw);aspect-ratio:8.5/11;display:grid;grid-template-rows:auto 1fr auto;padding:10px 10px 12px;position:relative;box-shadow:0 10px 0 -4px rgba(0,0,0,.12)}
+.sign{background:#fff;color:#111;border:3px solid #111;border-radius:6px;width:min(220px,62vw);min-height:min(284px,80vw);display:grid;grid-template-rows:auto 1fr auto;align-items:center;padding:10px 10px 12px;position:relative;box-shadow:0 10px 0 -4px rgba(0,0,0,.12)}
 .sign .num{font-family:var(--display);font-weight:800;font-size:1.05rem;border:2.5px solid #111;border-radius:50%;width:2.1rem;height:2.1rem;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .sign .cls{position:absolute;top:12px;right:12px;font-family:var(--display);font-weight:800;font-size:.85rem;letter-spacing:.1em}
-.sign svg{width:100%;height:100%;max-height:150px;align-self:center}
+.sign svg{width:100%;height:150px;align-self:center}
 .sign .nm{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.25rem;line-height:1;text-align:center;text-wrap:balance}
-.sign.sm{width:118px;padding:6px 6px 8px;border-width:2.5px}
+.sign.sm{width:118px;min-height:152px;padding:6px 6px 8px;border-width:2.5px}
 .sign.sm .num{font-size:.8rem;width:1.6rem;height:1.6rem;border-width:2px}
 .sign.sm .cls{display:none}
-.sign.sm .nm{font-size:.85rem}
-.sign.sm svg{max-height:70px}
+.sign.sm .nm{font-size:.78rem}
+.sign.sm svg{height:78px}
 .post{width:10px;height:26px;background:var(--mat);border-radius:0 0 3px 3px}
 .base{width:90px;height:8px;border-radius:6px;background:var(--mat)}
 .stand.sm .post{height:12px;width:7px}.stand.sm .base{width:56px;height:6px}
@@ -148,92 +148,106 @@ footer a{color:var(--accent)}
 <script>
 (function(){
 "use strict";
-/* ---------- Data: AKC Rally Novice signs 1-42 ---------- */
+/* ---------- Data: AKC Rally Novice signs 1-42 (AKC Rally Signs and Descriptions, rev. Jan 2018) ---------- */
 const UNITS={1:"Basics & Pace",2:"Turns",3:"Circles & Loops",4:"Fronts & Finishes",5:"Halts & Stays",6:"Cones & Side Step"};
 const SIGNS=[
-{n:1,u:1,name:"Start",ic:"start",d:"Marks the beginning of the course. Your dog does not have to be sitting.",tip:"Set up in heel position anyway. A calm start sets the tone."},
-{n:2,u:1,name:"Finish",ic:"finish",d:"Marks the end of the course. The clock stops when you pass it.",tip:"Keep the leash loose all the way past the sign, then celebrate."},
-{n:3,u:1,st:1,name:"Halt – Sit",ic:"oct",t:["SIT"],d:"Stop. Your dog sits in heel position. Then heel forward.",tip:"Stop square and look ahead. Twisting to look down at a small dog pulls the sit crooked."},
-{n:4,u:1,st:1,name:"Halt – Sit – Down",ic:"oct",t:["SIT","DOWN"],d:"Stop and your dog sits in heel position, then lies down in heel position. Then heel forward.",tip:"Teach a hand signal that sweeps toward the floor so you don't have to fold over a 15 lb dog."},
-{n:17,u:1,name:"Slow Pace",ic:"slow",d:"Slow down noticeably. A Normal Pace sign follows, unless it's the last sign.",tip:"Make it obvious. The judge wants to see a clear change."},
-{n:18,u:1,name:"Fast Pace",ic:"fast",d:"Speed up noticeably. A Normal Pace sign follows.",tip:"Small legs, big effort. Jog and cheer your dog on."},
-{n:19,u:1,name:"Normal Pace",ic:"normal",d:"Return to a brisk normal walk. Only used right after a slow or fast pace.",tip:"Brisk is the word. A dragging normal pace costs points."},
-{n:5,u:2,name:"Right Turn",ic:"right",d:"Make a 90° turn to the right while heeling.",tip:"Your dog is on the outside and travels farther. Talk them through it."},
-{n:6,u:2,name:"Left Turn",ic:"right",m:1,d:"Make a 90° turn to the left while heeling.",tip:"Your dog is on the inside. Shorten your steps so you don't clip paws."},
-{n:7,u:2,name:"About Turn – Right",ic:"about",d:"Make a 180° turn to the right while heeling.",tip:"Keep your left hand at your seam so your dog can follow it around."},
-{n:8,u:2,name:"About “U” Turn",ic:"about",m:1,d:"Make a 180° turn to the left while heeling, with your dog on the inside of the turn.",tip:"Slow way down into this one. Small dogs get stepped on here more than anywhere."},
-{n:29,u:2,name:"Left About Turn",ic:"leftabout",d:"You turn 180° to the left while your dog moves around you to the right and ends in heel position.",tip:"Teach the dog's part first as a standing trick, then add your turn."},
-{n:39,u:2,name:"Diagonal Right",ic:"diag",d:"Make an open-angle (about 45°) turn to the right while heeling.",tip:"The sign sits in your path. Turn at the sign, not after it."},
-{n:40,u:2,name:"Diagonal Left",ic:"diag",m:1,d:"Make an open-angle (about 45°) turn to the left while heeling.",tip:"Same as the right diagonal, with smaller steps since your dog is on the inside."},
-{n:9,u:3,name:"270° Right Turn",ic:"t270",d:"Make a tight 270° turn to the right while heeling.",tip:"Shortcut: a 270° right leaves you facing the same way a 90° left would."},
-{n:10,u:3,name:"270° Left Turn",ic:"t270",m:1,d:"Make a tight 270° turn to the left while heeling.",tip:"Shuffle small steps and keep your dog tight to your leg."},
-{n:11,u:3,name:"360° Right Turn",ic:"t360",d:"Make a tight full circle to the right while heeling, then keep going the same direction.",tip:"Pick a spot on the wall to finish facing so you come out straight."},
-{n:12,u:3,name:"360° Left Turn",ic:"t360",m:1,d:"Make a tight full circle to the left while heeling, then keep going the same direction.",tip:"Your dog is on the inside: go slow so they can stay close without getting bumped."},
-{n:37,u:3,name:"Loop Right",ic:"loop",d:"Loop to the right while heeling, crossing over your original path.",tip:"Think of drawing a lowercase cursive “e” on the floor."},
-{n:38,u:3,name:"Loop Left",ic:"loop",m:1,d:"Loop to the left while heeling, crossing over your original path.",tip:"Same shape as Loop Right, mirrored. Small steps on the inside."},
-{n:13,u:4,st:1,name:"Call Front – Finish Right – Forward",ic:"front",f:"R",d:"Stop and call your dog to sit in front of you. Without moving your feet, your dog finishes to the right, around behind you to heel. Then heel forward.",tip:"Stand tall with hands centered at your waist. Leaning over a small dog makes them sit too far away."},
-{n:14,u:4,st:1,name:"Call Front – Finish Left – Forward",ic:"front",f:"L",d:"Stop and call your dog to sit in front of you. Without moving your feet, your dog swings to your left into heel. Then heel forward.",tip:"Lure the swing with your left hand at first, then fade it to a small signal."},
-{n:15,u:4,st:1,name:"Call Front – Finish Right – Halt",ic:"front",f:"R",h:1,d:"Stop and call your dog to sit in front. Your dog finishes to the right into heel and sits. Then heel forward.",tip:"Same as #13 plus a sit at the end. Wait for the sit before you step off."},
-{n:16,u:4,st:1,name:"Call Front – Finish Left – Halt",ic:"front",f:"L",h:1,d:"Stop and call your dog to sit in front. Your dog swings left into heel and sits. Then heel forward.",tip:"Same as #14 plus a sit at the end."},
-{n:26,u:4,st:1,name:"Call Front – 1, 2, 3 Steps Backward",ic:"back123",d:"Call your dog to sit in front. Step back one step, then two, then three. Your dog follows and sits in front after each. Then finish and heel forward.",tip:"Small dogs love this one. Keep your steps short so they can keep up."},
-{n:35,u:4,st:1,name:"Call Front – Return to Heel",ic:"walk",t:"FRONT",d:"Call your dog to sit in front. Your dog stays while you walk around behind it back to heel position. Pause, then heel forward.",tip:"Practice the stay with a hand on your belly button so your dog isn't tempted to follow your hands."},
-{n:25,u:5,st:1,name:"Halt – 1, 2 & 3 Steps Forward",ic:"oct",t:["1·2·3"],d:"Halt and sit. Take one step and halt, two steps and halt, three steps and halt. Your dog heels with you and sits each time.",tip:"Count out loud in practice. It helps you keep the steps honest."},
-{n:27,u:5,st:1,name:"Stop and Down",ic:"oct",t:["DOWN"],d:"Stop and your dog lies down in heel position, with no sit first. It stays down until you move forward.",tip:"Don't mix this up with #4. Here the dog goes straight to the down."},
-{n:28,u:5,st:1,name:"Halt – Fast Forward from Sit",ic:"oct",t:["SIT","FAST"],d:"Halt and sit, then heel forward at a fast pace. A Normal Pace sign follows.",tip:"Burst off the line like it's a race. Then settle at the Normal sign."},
-{n:36,u:5,st:1,name:"Halt – Slow Forward from Sit",ic:"oct",t:["SIT","SLOW"],d:"Halt and sit, then heel forward at a slow pace. A Normal Pace sign follows, unless it's the last sign.",tip:"Slow from the very first step. No warm-up stride at normal speed."},
-{n:30,u:5,st:1,name:"Halt – Walk Around Dog",ic:"walk",t:"SIT",d:"Halt and sit. Your dog stays sitting while you walk all the way around it and back to heel. Pause, then heel forward.",tip:"Walk a wide circle at first so your dog doesn't swing around to follow you."},
-{n:31,u:5,st:1,name:"Halt – Down – Walk Around Dog",ic:"walk",t:"DOWN",d:"Halt and sit, then down. Your dog stays down while you walk around it back to heel. Pause, then heel forward.",tip:"A down-stay is easier than a sit-stay for most small dogs. Build it on a mat at home."},
-{n:33,u:5,st:1,name:"Halt – Right Turn – Forward",ic:"oct",t:["SIT","RIGHT"],d:"Halt and sit, then turn right together and heel forward.",tip:"Turn your feet and shoulders together so your dog reads the new direction."},
-{n:34,u:5,st:1,name:"Halt – Left Turn – Forward",ic:"oct",t:["SIT","LEFT"],d:"Halt and sit, then turn left together and heel forward.",tip:"Pivot slowly into your dog so you don't knock them."},
-{n:20,u:6,name:"Moving Side Step Right",ic:"side",d:"Take one step to the right, leading with your right foot, then keep heeling forward on the new line. Your dog moves with you.",tip:"Exaggerate the step at first. Your dog learns to read your hip."},
-{n:21,u:6,name:"Spiral Right – Dog Outside",ic:"spiral",d:"Three cones in a row. Turn right around each cone, so your dog is on the outside of the spiral.",tip:"Your dog is on the outside, so they have more ground to cover. Keep the energy up."},
-{n:22,u:6,name:"Spiral Left – Dog Inside",ic:"spiral",m:1,d:"Three cones in a row. Turn left around each cone, so your dog is on the inside of the spiral.",tip:"Your dog is on the inside. Slow down so the cones don't get knocked."},
-{n:23,u:6,name:"Straight Figure 8 Weave Twice",ic:"weave",d:"Four cones in a line. Enter with the first cone on your left and weave through the line twice.",tip:"Speed up when your dog is on the outside of a cone, slow down when they're on the inside."},
-{n:24,u:6,name:"Serpentine Weave Once",ic:"serp",d:"Four cones in a line. Enter with the first cone on your left and weave through once, without looping back.",tip:"Look where you're going next, not at the cone you're passing."},
-{n:32,u:6,name:"Figure 8 – No Distractions",ic:"fig8",d:"Two cones 6–8 feet apart. Heel a full figure 8 around them. You may enter from either side.",tip:"Your pace changes naturally on each loop. Keep the leash loose through both."},
-{n:41,u:6,name:"Offset Serpentine Right",ic:"offset",d:"Three cones with the middle cone set 3–4 feet to the right. Enter with the first cone on your right and snake through.",tip:"Walk the offset line during walkthrough so the angle doesn't surprise you."},
-{n:42,u:6,name:"Offset Serpentine Left",ic:"offset",m:1,d:"Three cones with the middle cone set 3–4 feet to the left. Enter with the first cone on your left and snake through.",tip:"Mirror of #41. Watch which side the first cone goes on."}
+{n:1,u:1,name:"Start",ic:"start",d:"Marks the beginning of the course. Your dog does not have to be sitting at the start.",tip:"Set up in heel position anyway. A calm start sets the tone."},
+{n:2,u:1,name:"Finish",ic:"finish",d:"Marks the end of the course. Timing stops.",tip:"Keep the leash loose all the way past the sign, then celebrate."},
+{n:3,u:1,st:1,name:"Halt – Sit",ic:"haltbox",t:["Sit"],d:"While heeling, you halt and your dog sits in heel position.",tip:"Stop square and look ahead. Twisting to look down at a small dog pulls the sit crooked."},
+{n:4,u:1,st:1,name:"Halt – Sit – Down",ic:"haltbox",t:["Sit","Down"],d:"While heeling, you halt and your dog sits in heel position. Your dog then downs in heel position.",tip:"Teach a hand signal that sweeps toward the floor so you don't have to fold over a 15 lb dog."},
+{n:17,u:1,name:"Slow Pace",ic:"block",t:["Slow","Pace"],d:"You and your dog slow down noticeably. A Normal Pace sign follows, unless it's the last station on the course.",tip:"Make it obvious. The judge wants to see a clear change."},
+{n:18,u:1,name:"Fast Pace",ic:"block",t:["Fast","Pace"],d:"You and your dog speed up noticeably. A Normal Pace sign follows.",tip:"Small legs, big effort. Jog and cheer your dog on."},
+{n:19,u:1,name:"Normal Pace",ic:"block",t:["Normal","Pace"],d:"You and your dog walk briskly. Only used right after a slow or fast pace sign.",tip:"Brisk is the word. A dragging normal pace costs points."},
+{n:5,u:2,name:"Right Turn",ic:"right",d:"Make a 90° turn to the right.",tip:"Your dog is on the outside and travels farther. Talk them through it."},
+{n:6,u:2,name:"Left Turn",ic:"right",m:1,d:"Make a 90° turn to the left.",tip:"Your dog is on the inside. Shorten your steps so you don't clip paws."},
+{n:7,u:2,name:"About Turn – Right",ic:"about",d:"Make a 180° turn to the right.",tip:"Keep your left hand at your seam so your dog can follow it around."},
+{n:8,u:2,name:"About “U” Turn",ic:"about",m:1,d:"Make a 180° turn to the left, with your dog on the inside of the turn.",tip:"Slow way down into this one. Small dogs get stepped on here more than anywhere."},
+{n:29,u:2,name:"Left About Turn",ic:"leftabout",d:"You make an about turn to the left while, at the same time, your dog moves around you to the right and into heel position.",tip:"Teach the dog's part first as a standing trick, then add your turn."},
+{n:39,u:2,name:"Diagonal Right",ic:"diag",d:"While heeling, make an open angle turn to the right. Your dog moves with you. The sign sits right in your path.",tip:"Turn at the sign, not after it."},
+{n:40,u:2,name:"Diagonal Left",ic:"diag",m:1,d:"While heeling, make an open angle turn to the left. Your dog moves with you. The sign sits right in your path.",tip:"Same as the right diagonal, with smaller steps since your dog is on the inside."},
+{n:9,u:3,name:"270° Right Turn",ic:"t270",d:"While heeling, you and your dog make a tight 270° turn to the right.",tip:"Shortcut: a 270° right leaves you facing the same way a 90° left would."},
+{n:10,u:3,name:"270° Left Turn",ic:"t270",m:1,d:"While heeling, you and your dog make a tight 270° turn to the left.",tip:"Shuffle small steps and keep your dog tight to your leg."},
+{n:11,u:3,name:"360° Right Turn",ic:"t360",d:"While heeling, you and your dog make a tight 360° turn to the right.",tip:"Pick a spot on the wall to finish facing so you come out straight."},
+{n:12,u:3,name:"360° Left Turn",ic:"t360",m:1,d:"While heeling, you and your dog make a tight 360° turn to the left.",tip:"Your dog is on the inside: go slow so they can stay close without getting bumped."},
+{n:37,u:3,name:"Loop Right",ic:"loop",d:"While heeling, you and your dog loop right, crossing over your original path.",tip:"Draw the loop on the floor in your head during walkthrough."},
+{n:38,u:3,name:"Loop Left",ic:"loop",m:1,d:"While heeling, you and your dog loop left, crossing over your original path.",tip:"Same shape as Loop Right, mirrored. Small steps on the inside."},
+{n:13,u:4,st:1,name:"Call Front – Finish Right – Forward",ic:"front",f:"R",d:"You stop and call your dog to sit in front (you may take a few steps back). Without moving your feet, your dog finishes to the right. As your dog clears your path, you heel forward before they're back in heel position.",tip:"Stand tall with hands centered at your waist. Leaning over a small dog makes them sit too far away."},
+{n:14,u:4,st:1,name:"Call Front – Finish Left – Forward",ic:"front",f:"L",d:"You stop and call your dog to sit in front (you may take a few steps back). Without moving your feet, your dog finishes to the left. As your dog clears your path, you heel forward before they're back in heel position.",tip:"Lure the swing with your left hand at first, then fade it to a small signal."},
+{n:15,u:4,st:1,name:"Call Front – Finish Right – Sit",ic:"front",f:"R",h:1,d:"You stop and call your dog to sit in front (you may take a few steps back). Without moving your feet, your dog finishes to the right and sits in heel position.",tip:"Same as #13, but wait for the sit before you step off."},
+{n:16,u:4,st:1,name:"Call Front – Finish Left – Sit",ic:"front",f:"L",h:1,d:"You stop and call your dog to sit in front (you may take a few steps back). Without moving your feet, your dog finishes to the left and sits in heel position.",tip:"Same as #14, but wait for the sit before you step off."},
+{n:26,u:4,st:1,name:"Call Front – 1, 2 and 3 Steps Backward – Forward",ic:"back123",d:"Call your dog to sit in front. Take one step back and halt, then two, then three. Each time your dog moves with you and sits in front. You may then cue a finish. As your dog clears your path, heel forward.",tip:"Small dogs love this one. Keep your steps short so they can keep up."},
+{n:35,u:4,st:1,name:"Call Front – Return to Heel",ic:"rth",d:"You stop and call your dog to sit in front (you may take a few steps back). Your dog stays while you walk around behind it back to heel position. Pause before heeling forward.",tip:"Practice the stay with your hands at your belly button so your dog isn't tempted to follow them."},
+{n:25,u:5,st:1,name:"Halt – 1, 2 and 3 Steps",ic:"steps123",d:"Halt and your dog sits. Take one step forward and halt, then two steps and halt, then three steps and halt. Your dog moves with you and sits in heel position each time.",tip:"Count out loud in practice. It helps you keep the steps honest."},
+{n:27,u:5,st:1,name:"Stop and Down",ic:"box",t:["Stop","and","Down"],d:"While heeling, you stop and your dog downs in heel position, with no sit first. Your dog stays down until you move forward.",tip:"Don't mix this up with #4. Here the dog goes straight to the down."},
+{n:28,u:5,st:1,name:"Halt – Fast Forward from Sit",ic:"haltfwd",t:["Fast","Forward","From Sit"],d:"Halt and your dog sits. Then you both heel forward at a fast pace. A Normal Pace sign follows.",tip:"Burst off the line like it's a race. Then settle at the Normal sign."},
+{n:36,u:5,st:1,name:"Halt – Slow Forward From Sit",ic:"haltbox",t:["Slow Forward","From Sit"],d:"Halt and your dog sits. Then you both heel forward at a slow pace. A Normal Pace sign follows, unless it's the last sign on the course.",tip:"Slow from the very first step. No warm-up stride at normal speed."},
+{n:30,u:5,st:1,name:"Halt – Walk Around",ic:"haltbox",t:["Walk","Around"],d:"Halt and your dog sits. Your dog stays while you walk around behind it, return to heel position and pause. Pause before heeling forward.",tip:"Walk a wide circle at first so your dog doesn't swing around to follow you."},
+{n:31,u:5,st:1,name:"Halt – Down – Walk Around",ic:"haltbox",t:["Down","Walk Around"],d:"Halt and your dog sits, then downs. Your dog stays down while you walk around behind it, return to heel position and pause. Then heel forward.",tip:"A down-stay is easier than a sit-stay for most small dogs. Build it on a mat at home."},
+{n:33,u:5,st:1,name:"Halt – Right Turn – Forward",ic:"haltturn",d:"Halt and your dog sits. You turn right together and heel forward.",tip:"Turn your feet and shoulders together so your dog reads the new direction."},
+{n:34,u:5,st:1,name:"Halt – Left Turn – Forward",ic:"haltturn",l:1,d:"Halt and your dog sits. You turn left together and heel forward.",tip:"Pivot slowly into your dog so you don't knock them."},
+{n:20,u:6,name:"Moving Side Step Right",ic:"side",d:"While heeling, take one step to the right, leading with your right foot, and keep heeling on the new line. Your dog moves with you. The sign sits right in your path, so you side-step to pass it.",tip:"Exaggerate the step at first. Your dog learns to read your hip."},
+{n:21,u:6,name:"Spiral Right – Dog Outside",ic:"spiral",d:"Three pylons in a straight line, about 6–8 feet apart. You and your dog turn right to go around each pylon, so your dog is on the outside.",tip:"Your dog is on the outside, so they have more ground to cover. Keep the energy up."},
+{n:22,u:6,name:"Spiral Left – Dog Inside",ic:"spiral",m:1,d:"Three pylons in a straight line, about 6–8 feet apart. You and your dog turn left to go around each pylon, so your dog is on the inside.",tip:"Your dog is on the inside. Slow down so the pylons don't get knocked."},
+{n:23,u:6,name:"Straight Figure 8 Weave Twice",ic:"weave",x:1,d:"Four pylons in a straight line, about 6–8 feet apart. Enter the weave with the first pylon on your left and complete the entire weave twice.",tip:"Speed up when your dog is on the outside of a pylon, slow down when they're on the inside."},
+{n:24,u:6,name:"Serpentine Weave Once",ic:"weave",d:"Four pylons in a straight line, about 6–8 feet apart. Enter the weave with the first pylon on your left and complete the entire weave once.",tip:"Look where you're going next, not at the pylon you're passing."},
+{n:32,u:6,name:"Figure 8 – No Distractions",ic:"fig8",d:"Two pylons about 6–8 feet apart. Enter with the pylons on either side and heel a complete figure 8 around them, crossing the center line three times.",tip:"Your pace changes naturally on each loop. Keep the leash loose through both."},
+{n:41,u:6,name:"Offset Serpentine Right",ic:"offset",d:"Three pylons. The center pylon is offset 3–4 feet to the right; the other two are about 6–8 feet apart. Enter with the first pylon on your right and complete the serpentine together.",tip:"Walk the offset line during walkthrough so the angle doesn't surprise you."},
+{n:42,u:6,name:"Offset Serpentine Left",ic:"offset",v:1,d:"Three pylons. The center pylon is offset 3–4 feet to the left; the other two are about 6–8 feet apart. Enter with the first pylon on your left and complete the serpentine together.",tip:"Mirror of #41. Watch which side the first pylon goes on."}
 ];
 const BYN={};SIGNS.forEach(s=>BYN[s.n]=s);
 
-/* ---------- Sign icons (simplified, not the official art) ---------- */
+/* ---------- Sign art: redrawn in the style of the official AKC signs (yellow arrows, red Halt badges, red pylons) ---------- */
 let uid=0;
-const P=(d,arrow=true,extra="")=>`<path d="${d}" fill="none" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" ${arrow?'marker-end="MK"':""} ${extra}/>`;
-const cone=(x,y)=>`<path d="M${x-7} ${y+8} L${x} ${y-9} L${x+7} ${y+8} Z" fill="#ef6a1c" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>`;
-const txt=(x,y,s,size=15)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,Arial" font-weight="800" font-size="${size}" fill="#111">${s}</text>`;
-function oct(lines){
-  const pts=[];for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4;pts.push((50+38*Math.cos(a)).toFixed(1)+","+(50+38*Math.sin(a)).toFixed(1));}
-  const sz=lines.length===1?24:15;const y0=50-(lines.length-1)*sz*0.55+sz*0.36;
-  return `<polygon points="${pts.join(" ")}" fill="none" stroke="#111" stroke-width="6" stroke-linejoin="round"/>`+txt(50,30,"HALT",11)+lines.map((l,i)=>txt(50,y0+i*sz*1.05+4,l,sz)).join("");
+const YEL="#f8e71c", RED="#e3161b";
+// fat outlined arrow: black underlay, yellow shaft, yellow head with black edge
+const A=(d,w=11,head=true)=>`<path d="${d}" fill="none" stroke="#111" stroke-width="${w+5}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${YEL}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${head?'marker-end="MK"':""}/>`;
+const T=(x,y,s,size=11,fill="#111",anchor="middle")=>`<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="${size}" fill="${fill}">${s}</text>`;
+function octPts(cx,cy,r){const p=[];for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4;p.push((cx+r*Math.cos(a)).toFixed(1)+","+(cy+r*Math.sin(a)).toFixed(1));}return p.join(" ");}
+const badge=(cx,cy,label="Halt",r=11)=>`<polygon points="${octPts(cx,cy,r)}" fill="${RED}" stroke="#111" stroke-width="1"/>`+T(cx,cy+2.6,label,r*0.62,"#fff");
+const pylon=(x,y,r=6)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${RED}" stroke="#111" stroke-width="1.5"/>`;
+function lines(arr,cx,cy,size,gap){const y0=cy-(arr.length-1)*gap/2+size*0.35;return arr.map((l,i)=>T(cx,y0+i*gap,l,size)).join("");}
+// yellow box with a small arrow on top (the Halt/Stop box signs)
+function boxArrow(t){
+  const poly="20,50 42,50 42,40 33,40 50,24 67,40 58,40 58,50 80,50 80,88 20,88";
+  const long=Math.max(...t.map(s=>s.length));const size=long>9?9.5:t.length>2?10:12;
+  return `<polygon points="${poly}" fill="${YEL}" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/>`+lines(t,50,69,size,size*1.15);
+}
+function blockUp(t){
+  return `<polygon points="30,92 30,46 14,46 50,10 86,46 70,46 70,92" fill="${YEL}" stroke="#111" stroke-width="1.8" stroke-linejoin="round"/>`+lines(t,50,66,12,14);
 }
 function iconInner(s){
   switch(s.ic){
-    case "start":return P("M50 84 V20")+`<path d="M28 88 H72" stroke="#111" stroke-width="7" stroke-linecap="round"/>`;
-    case "finish":{let r="";for(let i=0;i<4;i++)for(let j=0;j<3;j++)if((i+j)%2===0)r+=`<rect x="${34+i*12}" y="${18+j*12}" width="12" height="12" fill="#111"/>`;return `<rect x="34" y="18" width="48" height="36" fill="none" stroke="#111" stroke-width="3"/>`+r+`<path d="M34 16 V90" stroke="#111" stroke-width="6" stroke-linecap="round"/>`;}
-    case "oct":return oct(s.t);
-    case "right":return P("M38 88 V50 Q38 34 54 34 H72");
-    case "about":return P("M32 88 V44 A18 18 0 0 1 68 44 V72");
-    case "leftabout":return P("M68 88 V44 A18 18 0 0 0 32 44 V72")+`<circle cx="82" cy="78" r="7" fill="#fff" stroke="#111" stroke-width="4"/>`+`<path d="M82 66 V30" stroke="#111" stroke-width="3.5" stroke-dasharray="4 5" fill="none"/>`;
-    case "diag":return P("M36 90 V64 L66 32");
-    case "t270":return P("M42 90 V45 A18 18 0 1 1 60 63 L24 63");
-    case "t360":return P("M38 92 V52 A16 16 0 0 1 70 52 A16 16 0 0 1 38 52 V18");
-    case "loop":return P("M48 92 V60 C48 30 82 30 78 52 C74 70 38 64 38 40 V14");
-    case "slow":return P("M38 30 L58 50 L38 70",false)+txt(50,92,"SLOW",17);
-    case "fast":return P("M18 30 L36 50 L18 70",false)+P("M42 30 L60 50 L42 70",false)+P("M66 30 L84 50 L66 70",false)+txt(50,92,"FAST",17);
-    case "normal":return P("M16 50 H80")+txt(50,82,"NORMAL",17);
+    case "start":return `<rect x="10" y="28" width="80" height="44" fill="#c9b800" stroke="#111" stroke-width="1.6"/><polygon points="10,28 90,28 82,36 18,36" fill="#fff59a"/><polygon points="10,28 18,36 18,64 10,72" fill="#e2d21a"/><rect x="18" y="36" width="64" height="28" fill="${YEL}" stroke="#111" stroke-width="1"/>`+T(50,55,"Start",13);
+    case "finish":{const p=[];for(let i=0;i<10;i++){const r=i%2?17:40;const a=-Math.PI/2+i*Math.PI/5;p.push((50+r*Math.cos(a)).toFixed(1)+","+(54+r*Math.sin(a)).toFixed(1));}return `<polygon points="${p.join(" ")}" fill="${YEL}" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/>`+T(50,58,"Finish",10.5);}
+    case "haltbox":return badge(18,18)+boxArrow(s.t);
+    case "box":return boxArrow(s.t);
+    case "block":return blockUp(s.t);
+    case "right":return A("M40 90 V40 H72",13);
+    case "about":return A("M34 90 V46 A17 17 0 0 1 68 46 V62",13);
+    case "leftabout":return A("M70 92 V44 A20 20 0 0 0 30 44 V60",13)+A("M44 92 V70 A9 9 0 0 1 62 70 V76",8);
+    case "diag":return A("M28 82 L68 40",12);
+    case "t270":return A("M44 92 V46 A17 17 0 1 1 61 63 L24 63",12);
+    case "t360":return A("M50 20 A30 30 0 1 1 24 35",13);
+    case "loop":return A("M60 92 V42 C60 12 92 20 84 40 C78 54 62 58 22 76",11);
     case "front":{
-      const dog=`<circle cx="50" cy="28" r="8" fill="#fff" stroke="#111" stroke-width="4.5"/>`;
-      const h=`<circle cx="50" cy="60" r="11" fill="#111"/>`;
-      const path=s.f==="R"?P("M60 30 C84 36 84 88 50 86 C34 86 30 78 32 66"):P("M40 32 C22 38 20 56 32 62");
-      return dog+h+path+(s.h?txt(18,94,"SIT",14):"");}
-    case "back123":return `<circle cx="50" cy="22" r="10" fill="#111"/><circle cx="50" cy="50" r="7" fill="#fff" stroke="#111" stroke-width="4.5"/>`+txt(26,92,"1",18)+txt(50,92,"2",18)+txt(74,92,"3",18)+P("M50 66 V78",false)+`<path d="M26 72 V78 M74 72 V78" stroke="#111" stroke-width="5" stroke-linecap="round"/>`;
-    case "walk":return `<circle cx="50" cy="52" r="9" fill="#fff" stroke="#111" stroke-width="4.5"/>`+P("M28 58 A24 24 0 1 1 30 64",true,'stroke-dasharray="1 11"')+txt(50,96,s.t,15);
-    case "side":return P("M36 90 V62 L60 54 V16");
-    case "spiral":return cone(28,56)+cone(50,56)+cone(72,56)+P("M18 84 C0 54 26 26 50 26 C76 26 98 44 88 70");
-    case "weave":return cone(50,20)+cone(50,40)+cone(50,60)+cone(50,80)+P("M50 98 C30 92 30 70 50 70 C70 70 70 50 50 50 C30 50 30 30 50 30 C70 30 70 14 52 8",true,'stroke-width="5"');
-    case "serp":return cone(20,56)+cone(40,56)+cone(60,56)+cone(80,56)+P("M6 44 C16 44 22 72 30 72 C38 72 42 40 50 40 C58 40 62 72 70 72 C78 72 84 44 94 44",true,'stroke-width="5"');
-    case "fig8":return cone(28,52)+cone(72,52)+P("M50 52 C64 28 92 30 92 52 C92 74 64 76 50 52 C36 28 8 30 8 52 C8 74 36 76 48 54",false,'stroke-width="5"');
-    case "offset":return cone(44,82)+cone(64,50)+cone(44,18)+P("M30 98 C24 84 78 72 78 50 C78 30 30 32 32 6",true,'stroke-width="5"');
+      let g=A("M50 92 V42 A15 15 0 0 1 80 42 V58",11);
+      if(s.f==="R")g+=A("M82 72 C82 96 36 98 36 80",7);else g+=A("M24 86 C10 82 10 64 22 60",6);
+      if(s.h)g+=badge(s.f==="R"?22:36,64,"Sit",9);else g+=A(s.f==="R"?"M30 82 V54":"M36 84 V58",6);
+      return g;}
+    case "back123":return A("M14 40 V24 A8 8 0 0 1 30 24 V30",6)+T(66,18,"Call Front",9.5)+[1,2,3].map(i=>T(74,30+i*20,i===1?"1 Step Back":i+" Steps Back",9,"#111","end")+badge(86,26+i*20,"Halt",8)).join("");
+    case "steps123":return badge(16,16,"Halt",9)+[1,2,3].map(i=>T(56,14+i*22,i===1?"1 Step":i+" Steps",11,"#111","end")+badge(76,10+i*22,"Halt",9)).join("");
+    case "haltfwd":return badge(24,22)+A("M74 92 V30",12)+lines(s.t,32,66,10.5,13);
+    case "haltturn":return s.l?badge(18,18)+A("M62 92 V48 H26",13)+A("M46 72 H22",6)
+                              :badge(18,18)+A("M38 92 V48 H74",13)+A("M54 72 H78",6);
+    case "rth":return A("M70 90 V46 A20 20 0 0 0 30 46 V58",13)+A("M46 92 V72 A8 8 0 0 1 62 72 V78",7);
+    case "side":return A("M40 92 V70 Q40 58 52 58 H62 V18",12);
+    case "spiral":return pylon(34,62)+pylon(50,62)+pylon(66,62)+A("M30 84 C8 70 14 42 46 38 C66 36 80 40 86 46",9);
+    case "weave":{let g=pylon(20,60)+pylon(40,60)+pylon(60,60)+pylon(80,60);
+      g+=A(s.x?"M8 54 C12 40 26 42 30 54 C34 68 46 68 50 56 C54 44 66 44 70 54 C74 66 88 70 92 58":"M8 54 C12 40 26 42 30 54 C34 68 46 68 50 56 C54 44 66 44 70 54 C74 66 86 66 92 60",5);
+      if(s.x)g+=A("M90 76 C70 90 30 90 12 78",4);
+      return g;}
+    case "fig8":return `<circle cx="28" cy="50" r="13" fill="${YEL}" stroke="#111" stroke-width="1.8"/><circle cx="72" cy="50" r="13" fill="${YEL}" stroke="#111" stroke-width="1.8"/>`+T(28,54,"P",11)+T(72,54,"P",11);
+    case "offset":return pylon(24,50)+pylon(50,66)+pylon(76,50)+A("M10 52 C10 30 38 28 38 48 C38 78 62 82 64 56 C66 30 92 32 92 50",5);
   }
   return "";
 }
@@ -241,10 +255,11 @@ function icon(s){
   const id="mk"+(++uid);
   let inner=iconInner(s).replaceAll("MK",`url(#${id})`);
   if(s.m)inner=`<g transform="translate(100,0) scale(-1,1)">${inner}</g>`;
-  return `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(s.name)} sign"><defs><marker id="${id}" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="3" markerHeight="3" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>${inner}</svg>`;
+  if(s.v)inner=`<g transform="translate(0,110) scale(1,-1)">${inner}</g>`;
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(s.name)} sign"><defs><marker id="${id}" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="2.4" markerHeight="2.4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${YEL}"/><path d="M0,0 L10,5 L0,10" fill="none" stroke="#111" stroke-width="1" stroke-linejoin="round"/></marker></defs>${inner}</svg>`;
 }
 function signHTML(s,opts={}){
-  return `<div class="stand${opts.sm?" sm":""}"><div class="sign${opts.sm?" sm":""}${opts.hide?" hide-name":""}"><div class="num">${s.n}</div><div class="cls">NOVICE</div>${icon(s)}<div class="nm">${esc(s.name)}</div></div><div class="post"></div><div class="base"></div></div>`;
+  return `<div class="stand${opts.sm?" sm":""}"><div class="sign${opts.sm?" sm":""}${opts.hide?" hide-name":""}"><div class="num">${s.n}</div>${icon(s)}<div class="nm">${esc(s.name)}</div></div><div class="post"></div><div class="base"></div></div>`;
 }
 function esc(x){return String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
@@ -403,8 +418,8 @@ function renderHome(){
     </label>
   </section>
   <footer>
-    <p>Built from the AKC Rally Regulations and the AKC Rally Signs and Descriptions (updated April 2026). Sign drawings here are simplified and won't look exactly like the real signs. Check the current rules before you enter a trial.</p>
-    <p><a href="https://www.akc.org/sports/rally/rally-resource-center/">AKC Rally Resource Center</a> · <a href="https://images.akc.org/pdf/Rally-Mini-Signs-Descriptions.pdf">AKC sign descriptions (PDF)</a></p>
+    <p>Signs and descriptions follow the AKC Rally Signs and Descriptions (2017 revision, January 2018). Sign art is redrawn in the official style, so print the AKC sheet for real practice. Check the current rules before you enter a trial.</p>
+    <p><a href="https://www.akc.org/sports/rally/rally-resource-center/">AKC Rally Resource Center</a> · <a href="https://cdn.akc.org/Rally/2017-rev-rally-minisignswdescriptions-1-2018.pdf">AKC signs and descriptions (PDF)</a></p>
     <p>Progress saves in this browser only. Made by <a href="/">Haile Shavers</a>.</p>
   </footer>`;
   app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
