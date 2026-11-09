@@ -73,7 +73,13 @@ header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:1
 .post{width:10px;height:26px;background:var(--mat);border-radius:0 0 3px 3px}
 .base{width:90px;height:8px;border-radius:6px;background:var(--mat)}
 .stand.sm .post{height:12px;width:7px}.stand.sm .base{width:56px;height:6px}
-.hide-name .nm{visibility:hidden}
+.hide-name .nm,.hide-name .num{display:none}
+.hide-name{grid-template-rows:1fr}
+.signopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.signopts .opt{padding:8px 4px 4px;display:grid;justify-items:center}
+.signopts .sign.sm{width:100%;min-height:0;aspect-ratio:8.5/11}
+.signopts .sign.sm svg{height:100%}
+.signopts .stand.sm .post,.signopts .stand.sm .base{display:none}
 
 .opts{display:grid;gap:10px}
 .opt{text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:1rem;line-height:1.35}
@@ -251,15 +257,15 @@ function iconInner(s){
   }
   return "";
 }
-function icon(s){
+function icon(s,hide){
   const id="mk"+(++uid);
   let inner=iconInner(s).replaceAll("MK",`url(#${id})`);
   if(s.m)inner=`<g transform="translate(100,0) scale(-1,1)">${inner}</g>`;
   if(s.v)inner=`<g transform="translate(0,110) scale(1,-1)">${inner}</g>`;
-  return `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(s.name)} sign"><defs><marker id="${id}" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="2.4" markerHeight="2.4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${YEL}"/><path d="M0,0 L10,5 L0,10" fill="none" stroke="#111" stroke-width="1" stroke-linejoin="round"/></marker></defs>${inner}</svg>`;
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="${hide?"Rally sign":esc(s.name)+" sign"}"><defs><marker id="${id}" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="2.4" markerHeight="2.4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${YEL}"/><path d="M0,0 L10,5 L0,10" fill="none" stroke="#111" stroke-width="1" stroke-linejoin="round"/></marker></defs>${inner}</svg>`;
 }
 function signHTML(s,opts={}){
-  return `<div class="stand${opts.sm?" sm":""}"><div class="sign${opts.sm?" sm":""}${opts.hide?" hide-name":""}"><div class="num">${s.n}</div>${icon(s)}<div class="nm">${esc(s.name)}</div></div><div class="post"></div><div class="base"></div></div>`;
+  return `<div class="stand${opts.sm?" sm":""}"><div class="sign${opts.sm?" sm":""}${opts.hide?" hide-name":""}"><div class="num">${s.n}</div>${icon(s,opts.hide)}<div class="nm">${esc(s.name)}</div></div><div class="post"></div><div class="base"></div></div>`;
 }
 function esc(x){return String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 
@@ -458,7 +464,7 @@ function startDrill(u){
   drill={qs:shuffle(qs).map(s=>makeQ(s)),i:0,right:0,answered:false,pick:null};jq=null;
 }
 function makeQ(s){
-  const type=Math.random()<.6?"a":"b";
+  const r=Math.random();const type=r<.4?"a":r<.7?"b":"c";
   const same=SIGNS.filter(x=>x.n!==s.n&&x.u===s.u&&x.n>2);
   const other=SIGNS.filter(x=>x.n!==s.n&&x.u!==s.u&&x.n>2);
   const dist=pick(same,2).concat(pick(other,2)).slice(0,2);
@@ -470,7 +476,7 @@ function renderDrill(){
   if(!drill||drill.done){
     const fin=drill&&drill.done;
     app.innerHTML=header("Practice","Drills")+(fin?`<section class="card"><div class="scoreline"><h2>Drill done</h2><span class="big">${drill.right}/10</span></div><p>${drill.right>=9?"Ring ready on these.":drill.right>=7?"Solid. Run it again to lock in the misses.":"Keep going. Misses come back first next round."}</p></section>`:"")+`
-    <section class="card"><h2>Sign drill</h2><p class="muted">10 questions. See a sign, pick what to do, or read the move and pick the sign. Signs you miss come up first next time.</p>
+    <section class="card"><h2>Sign drill</h2><p class="muted">10 questions with sign names hidden, like in the ring. See a sign and pick what to do or what it's called, or read the move and tap the matching sign. Signs you miss come up first next time.</p>
     <div class="row" role="group" aria-label="Pick a unit">${[0,1,2,3,4,5,6].map(u=>`<button class="chip" data-u="${u}" aria-pressed="${u===drillUnit}">${u?UNITS[u]:"All signs"}</button>`).join("")}</div>
     <button class="btn block" id="go">Start sign drill</button></section>
     <section class="card"><h2>Judge's eye</h2><p class="muted">10 questions on scoring. Know what each mistake costs before it happens in the ring.</p><button class="btn ghost block" id="jgo">Start judge quiz</button></section>`;
@@ -480,11 +486,11 @@ function renderDrill(){
     return;
   }
   const q=drill.qs[drill.i];const s=q.s;
-  const prompt=q.type==="a"?`<div class="detail">${signHTML(s)}</div><h3>What do you and ${esc(dog())} do?</h3>`:`<div class="card" style="background:var(--bg)"><p style="font-size:1.08rem">“${esc(s.d)}”</p></div><h3>Which sign is this?</h3>`;
-  const optText=o=>q.type==="a"?esc(o.d):`<b>#${o.n}</b> ${esc(o.name)}`;
+  const prompt=q.type==="a"?`<div class="detail">${signHTML(s,{hide:1})}</div><h3>What do you and ${esc(dog())} do?</h3>`:q.type==="c"?`<div class="detail">${signHTML(s,{hide:1})}</div><h3>What is this sign called?</h3>`:`<div class="card" style="background:var(--bg)"><p style="font-size:1.08rem">“${esc(s.d)}”</p></div><h3>Tap the sign that matches.</h3>`;
+  const optText=o=>q.type==="a"?esc(o.d):q.type==="c"?esc(o.name):signHTML(o,{sm:1,hide:1});
   app.innerHTML=header("Sign drill · "+(drillUnit?UNITS[drillUnit]:"All signs"),`Question ${drill.i+1}<small class="muted" style="font-size:1rem"> /10</small>`)+`
   <div class="bar" aria-hidden="true"><i style="width:${drill.i*10}%"></i></div>
-  <section class="card">${prompt}<div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}">${optText(o)}</button>`).join("")}</div><div id="fb"></div></section>`;
+  <section class="card">${prompt}<div class="${q.type==="b"?"signopts":"opts"}">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}" ${q.type==="b"?`aria-label="Sign option ${k+1}"`:""}>${optText(o)}</button>`).join("")}</div><div id="fb"></div></section>`;
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
     if(drill.answered)return;drill.answered=true;
     const o=q.opts[+b.dataset.k];const ok=o.n===s.n;
@@ -555,7 +561,7 @@ function renderCourse(){
   if(c.phase==="sign"){
     const s=BYN[c.seq[c.i]];
     if(!c.opts){const q=makeQ(s);q.type="a";c.opts=q.opts;}
-    app.innerHTML=top(c.tries?"Retry":"Next sign")+`<section class="card"><div class="detail">${signHTML(s)}</div><h3>${c.tries?"Retry costs 3 points. Try again:":"What do you do?"}</h3><div class="opts">${c.opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.d)}</button>`).join("")}</div><div id="fb"></div></section>`;
+    app.innerHTML=top(c.tries?"Retry":"Next sign")+`<section class="card"><div class="detail">${signHTML(s,{hide:1})}</div><h3>${c.tries?"Retry costs 3 points. Try again:":"What do you do?"}</h3><div class="opts">${c.opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.d)}</button>`).join("")}</div><div id="fb"></div></section>`;
     app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
       const o=c.opts[+b.dataset.k];const ok=o.n===s.n;
       app.querySelectorAll(".opt").forEach(x=>x.disabled=true);
